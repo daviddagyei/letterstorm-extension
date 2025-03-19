@@ -1,0 +1,14 @@
+{
+  "manifest_version": 3,
+  "name": "LetterStorm",
+  "version": "1.0",
+  "action": {
+    "default_popup": "index.html"
+  },
+  "web_accessible_resources": [
+    {
+      "resources": ["words_dictionary.json", "background.png", "score.mp3", "wrong.mp3"],
+      "matches": ["<all_urls>"]
+    }
+  ]
+}

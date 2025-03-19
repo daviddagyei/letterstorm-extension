@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>LetterStorm</title>
+  <!-- Load the futuristic Orbitron font -->
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    /* Fixed dimensions so the game area fills 800x600 exactly */
+    html, body {
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      width: 800px;
+      height: 600px;
+    }
+    body {
+      background: #222;
+      color: white;
+      font-family: 'Orbitron', sans-serif;
+      position: relative;
+    }
+    canvas {
+      display: block;
+      width: 800px;
+      height: 600px;
+      border: none;
+    }
+    /* Welcome overlay styling */
+    #welcomeOverlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 800px;
+      height: 600px;
+      background: rgba(0,0,0,0.9);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 250;
+    }
+    #welcomeOverlay h1 {
+      font-size: 48px;
+      margin-bottom: 10px;
+    }
+    #welcomeOverlay p {
+      font-size: 18px;
+      margin-bottom: 20px;
+    }
+    #welcomeOverlay button {
+      margin: 10px;
+      padding: 10px 20px;
+      font-size: 24px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+    #welcomeOverlay button:hover {
+      transform: scale(1.05);
+    }
+    /* Mode selection overlay */
+    #modeOverlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 800px;
+      height: 600px;
+      background: rgba(0,0,0,0.85);
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 200;
+    }
+    #modeOverlay h2 {
+      font-size: 36px;
+      margin-bottom: 20px;
+    }
+    #modeOverlay button {
+      margin: 10px;
+      padding: 10px 20px;
+      font-size: 20px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+    #modeOverlay button:hover {
+      transform: scale(1.05);
+    }
+    #letterMode {
+      background: #4CAF50;
+      color: white;
+    }
+    #wordMode {
+      background: #2196F3;
+      color: white;
+    }
+    /* Pause overlay styling */
+    #pauseOverlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 800px;
+      height: 600px;
+      background: rgba(0, 0, 0, 0.85);
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 300;
+    }
+    #pauseOverlay h2 {
+      font-size: 36px;
+      margin-bottom: 20px;
+    }
+    #pauseOverlay button {
+      margin: 10px;
+      padding: 10px 20px;
+      font-size: 20px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+    #pauseOverlay button:hover {
+      transform: scale(1.05);
+    }
+    /* Game over overlay (shared by both modes) */
+    #gameOverlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 800px;
+      height: 600px;
+      background: rgba(0, 0, 0, 0.75);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 150;
+    }
+    #popup {
+      background: #333;
+      padding: 30px;
+      border-radius: 8px;
+      box-shadow: 0 8px 16px rgba(0,0,0,0.7);
+      text-align: center;
+    }
+    #popup button {
+      margin: 10px;
+      padding: 10px 20px;
+      font-size: 16px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+    #popup button:hover {
+      transform: scale(1.05);
+    }
+    #playAgain {
+      background: #4CAF50;
+      color: white;
+    }
+    #quit {
+      background: #f44336;
+      color: white;
+    }
+    /* Control buttons (Close only) */
+    #closeBtn {
+      position: absolute;
+      top: 5px;
+      right: 5px;
+      background: transparent;
+      border: none;
+      font-size: 24px;
+      color: white;
+      cursor: pointer;
+      z-index: 400;
+    }
+  </style>
+</head>
+<body>
+  <button id="closeBtn">X</button>
+  <canvas id="gameCanvas" width="800" height="600"></canvas>
+  
+  <!-- Welcome overlay with instructions -->
+  <div id="welcomeOverlay">
+    <h1>Welcome to LetterStorm!</h1>
+    <p>Press <strong>Space</strong> to pause during gameplay.</p>
+    <button id="openModes">Open Game Modes</button>
+  </div>
+  
+  <!-- Mode selection overlay -->
+  <div id="modeOverlay">
+    <h2>Select Game Mode</h2>
+    <button id="letterMode">Typing Letters</button>
+    <button id="wordMode">Typing Words</button>
+  </div>
+  
+  <!-- Pause overlay -->
+  <div id="pauseOverlay">
+    <h2>Game Paused</h2>
+    <button id="resumeBtn">Resume</button>
+    <button id="menuBtn">Back to Menu</button>
+    <button id="pauseQuit">Quit</button>
+  </div>
+  
+  <!-- Game over overlay (shared by both modes) -->
+  <div id="gameOverlay">
+    <div id="popup">
+      <h2 id="popupTitle">Game Over</h2>
+      <p id="popupScore"></p>
+      <button id="playAgain">Play Again</button>
+      <button id="quit">Quit</button>
+    </div>
+  </div>
+  
+  <!-- Load external scripts -->
+  <script src="game.js"></script>
+  <script src="words.js"></script>
+  <script src="main.js"></script>
+</body>
+</html>
