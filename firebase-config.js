@@ -16,6 +16,10 @@ const firebaseConfig = {
   measurementId: "G-DY452Z298G"
 };
 
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
+// Initialize Firebase using the global firebase object that's loaded from firebase-app-compat.js
+firebase.initializeApp(firebaseConfig);
+
+// If you want analytics (optional)
+if (firebase.analytics) {
+  const analytics = firebase.analytics();
+}
