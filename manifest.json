@@ -1,14 +1,22 @@
 {
   "manifest_version": 3,
   "name": "LetterStorm",
-  "version": "1.0",
+  "version": "1.0.0",
+  "description": "A word game Chrome extension with Firebase authentication",
+  "permissions": [
+    "storage"
+  ],
   "action": {
-    "default_popup": "index.html"
+    "default_popup": "login.html"
   },
   "web_accessible_resources": [
     {
       "resources": ["words_dictionary.json", "background.png", "score.mp3", "wrong.mp3"],
       "matches": ["<all_urls>"]
     }
+  ],
+  "host_permissions": [
+    "https://*.firebaseio.com/",
+    "https://*.googleapis.com/"
   ]
 }

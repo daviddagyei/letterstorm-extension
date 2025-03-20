@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>LetterStorm - Login</title>
+  <link rel="stylesheet" href="login.css">
+  <!-- Use local Firebase scripts instead of CDN -->
+  <script src="lib/firebase-app-compat.js"></script>
+  <script src="lib/firebase-auth-compat.js"></script>
+  <script src="firebase-config.js"></script>
+  <script src="auth.js"></script>
+</head>
+<body>
+  <div class="container">
+    <h1>LetterStorm</h1>
+    
+    <div id="welcome-screen" class="screen active">
+      <h2>Welcome to LetterStorm!</h2>
+      <div class="button-container">
+        <button id="guest-button" class="btn">Play as Guest</button>
+        <button id="login-option-button" class="btn">Play as User</button>
+      </div>
+    </div>
+    
+    <div id="login-screen" class="screen">
+      <h2>Login</h2>
+      <form id="login-form">
+        <div class="form-control">
+          <label for="login-email">Email</label>
+          <input type="email" id="login-email" required>
+        </div>
+        <div class="form-control">
+          <label for="login-password">Password</label>
+          <input type="password" id="login-password" required>
+        </div>
+        <div class="error-message" id="login-error"></div>
+        <button type="submit" class="btn">Login</button>
+      </form>
+      <p>Don't have an account? <a href="#" id="goto-signup">Create one</a></p>
+      <p><a href="#" id="back-to-welcome-1">Back</a></p>
+    </div>
+    
+    <div id="signup-screen" class="screen">
+      <h2>Create Account</h2>
+      <form id="signup-form">
+        <div class="form-control">
+          <label for="signup-email">Email</label>
+          <input type="email" id="signup-email" required>
+        </div>
+        <div class="form-control">
+          <label for="signup-password">Password</label>
+          <input type="password" id="signup-password" required>
+        </div>
+        <div class="form-control">
+          <label for="signup-confirm">Confirm Password</label>
+          <input type="password" id="signup-confirm" required>
+        </div>
+        <div class="error-message" id="signup-error"></div>
+        <button type="submit" class="btn">Create Account</button>
+      </form>
+      <p>Already have an account? <a href="#" id="goto-login">Login</a></p>
+      <p><a href="#" id="back-to-welcome-2">Back</a></p>
+    </div>
+  </div>
+
+  <script src="login.js"></script>
+</body>
+</html>
