@@ -17,8 +17,43 @@ function initLetterMode() {
   let gameState = "start"; // "start", "playing", "paused", or "gameover"
   let letterInterval;
 
-  // Load / initialize high score for letters mode
-  let highScore = parseInt(localStorage.getItem("letterModeHighScore")) || 0;
+  // Initialize high score with loading indicator
+  let highScore = 0;
+  // Use ScoresManager if available, otherwise fall back to localStorage
+  const loadHighScore = () => {
+    if (window.ScoresManager) {
+      console.log("Loading letter mode high score from ScoresManager");
+      return ScoresManager.loadHighScore("letterMode")
+        .then(score => {
+          highScore = score;
+          console.log("Letter mode high score loaded:", highScore);
+        })
+        .catch(err => {
+          console.error("Error loading high score:", err);
+          // Fall back to localStorage
+          highScore = parseInt(localStorage.getItem("letterModeHighScore")) || 0;
+        });
+    } else {
+      console.log("ScoresManager not found, using localStorage");
+      highScore = parseInt(localStorage.getItem("letterModeHighScore")) || 0;
+      return Promise.resolve();
+    }
+  };
+  
+  // Save high score using ScoresManager or localStorage
+  const saveHighScore = (newScore) => {
+    if (window.ScoresManager) {
+      console.log("Saving letter mode high score to ScoresManager:", newScore);
+      return ScoresManager.saveHighScore("letterMode", newScore);
+    } else {
+      console.log("ScoresManager not found, using localStorage");
+      localStorage.setItem("letterModeHighScore", newScore);
+      return Promise.resolve();
+    }
+  };
+
+  // Load the high score at initialization
+  loadHighScore();
 
   const backgroundImage = new Image();
   backgroundImage.src = "background.png";
@@ -72,7 +107,7 @@ function initLetterMode() {
       const letterWidth = ctx.measureText(this.char).width;
       const margin = 10; // Some padding from the edges
 
-      // Random X within [margin, SCREEN_WIDTH - letterWidth - margin]
+      // Random X within [margin, SCREEN_WIDTH - letterWidth - margin * 2)
       this.x = Math.floor(
         Math.random() * (SCREEN_WIDTH - letterWidth - margin * 2)
       ) + margin;
@@ -261,10 +296,10 @@ function initLetterMode() {
           letters.splice(i, 1);
           score++;
 
-          // If new score is higher, update highScore and localStorage
+          // If new score is higher, update highScore and save it
           if (score > highScore) {
             highScore = score;
-            localStorage.setItem("letterModeHighScore", highScore);
+            saveHighScore(highScore); // Save using our new function
           }
 
           // Play correct sound

@@ -1,0 +1,15 @@
+{
+  "rules": {
+    "userScores": {
+      "$userId": {
+        // Only allow reading and writing if the user is authenticated and owns the document
+        ".read": "auth != null && auth.uid == $userId",
+        ".write": "auth != null && auth.uid == $userId",
+        
+        // Validate the data structure
+        ".validate": "newData.hasChildren(['userId']) && 
+                      newData.child('userId').val() == $userId"
+      }
+    }
+  }
+}
