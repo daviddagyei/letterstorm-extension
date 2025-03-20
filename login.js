@@ -1,4 +1,13 @@
 document.addEventListener('DOMContentLoaded', () => {
+  console.log("Login page loaded");
+  
+  // Check if Firebase is properly initialized
+  if (typeof firebase === 'undefined') {
+    console.error("Firebase is not defined! Make sure Firebase SDK is loaded.");
+    document.body.innerHTML = '<div style="color: red; padding: 20px;">Error: Firebase SDK not loaded. Please check your network connection and try again.</div>';
+    return;
+  }
+  
   // Get DOM elements
   const welcomeScreen = document.getElementById('welcome-screen');
   const loginScreen = document.getElementById('login-screen');
@@ -16,14 +25,6 @@ document.addEventListener('DOMContentLoaded', () => {
   const loginError = document.getElementById('login-error');
   const signupError = document.getElementById('signup-error');
 
-  // Check if user is already logged in
-  checkAuthState().then(user => {
-    if (user) {
-      // User is already logged in, redirect to game
-      startGame(user);
-    }
-  });
-
   // Helper to show a specific screen
   function showScreen(screen) {
     welcomeScreen.classList.remove('active');
@@ -34,11 +35,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Play as guest
   guestButton.addEventListener('click', () => {
+    console.log("Play as guest clicked");
     startGame(null);
   });
 
   // Show login options
   loginOptionButton.addEventListener('click', () => {
+    console.log("Play as user clicked");
     showScreen(loginScreen);
   });
 
@@ -69,17 +72,22 @@ document.addEventListener('DOMContentLoaded', () => {
     const email = document.getElementById('login-email').value;
     const password = document.getElementById('login-password').value;
     loginError.textContent = '';
-
-    loginWithEmail(email, password)
-      .then(user => {
-        startGame(user);
+    
+    console.log("Attempting to log in with:", email);
+    
+    // Direct Firebase login
+    firebase.auth().signInWithEmailAndPassword(email, password)
+      .then((userCredential) => {
+        console.log("Login successful:", userCredential.user.email);
+        startGame(userCredential.user);
       })
-      .catch(error => {
+      .catch((error) => {
+        console.error("Login error:", error.code, error.message);
         loginError.textContent = error.message;
       });
   });
 
-  // Signup form submission
+  // Signup form submission - USING DIRECT FIREBASE
   signupForm.addEventListener('submit', (e) => {
     e.preventDefault();
     const email = document.getElementById('signup-email').value;
@@ -91,21 +99,27 @@ document.addEventListener('DOMContentLoaded', () => {
       signupError.textContent = "Passwords don't match";
       return;
     }
-
-    createAccount(email, password)
-      .then(() => {
+    
+    console.log("Attempting to create account with:", email);
+    
+    // Direct Firebase account creation instead of using auth.js
+    firebase.auth().createUserWithEmailAndPassword(email, password)
+      .then((userCredential) => {
+        console.log("Account created successfully:", userCredential.user.email);
         // Redirect to login after successful signup
         showScreen(loginScreen);
         document.getElementById('login-email').value = email;
         loginError.textContent = "Account created! Please login.";
       })
-      .catch(error => {
+      .catch((error) => {
+        console.error("Signup error:", error.code, error.message);
         signupError.textContent = error.message;
       });
   });
 
   // Start the game
   function startGame(user) {
+    console.log("Starting game with user:", user ? user.email : "guest");
     if (user) {
       localStorage.setItem('user', JSON.stringify({
         uid: user.uid,
@@ -119,4 +133,13 @@ document.addEventListener('DOMContentLoaded', () => {
     // Redirect to the game page
     window.location.href = 'index.html';
   }
+  
+  // Check if user is already logged in
+  firebase.auth().onAuthStateChanged(user => {
+    console.log("Auth state changed:", user ? "User logged in" : "No user");
+    if (user) {
+      // User is already logged in, redirect to game
+      startGame(user);
+    }
+  });
 });

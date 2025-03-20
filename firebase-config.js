@@ -1,25 +1,19 @@
-// Import the functions you need from the SDKs you need
-import { initializeApp } from "firebase/app";
-import { getAnalytics } from "firebase/analytics";
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
-
-// Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
-  apiKey: "AIzaSyCli2nXBy127AYlWftXd1aTuzlEwtMWy48",
-  authDomain: "letstorm-44376.firebaseapp.com",
-  projectId: "letstorm-44376",
-  storageBucket: "letstorm-44376.firebasestorage.app",
-  messagingSenderId: "1020943587605",
-  appId: "1:1020943587605:web:5b21831dbf2a0e0dc0f11c",
-  measurementId: "G-DY452Z298G"
-};
+    apiKey: "AIzaSyC0suai5DOTZxN2uLe2AmC6-obhVriL3uc",
+    authDomain: "letterstorm-15f1c.firebaseapp.com",
+    projectId: "letterstorm-15f1c",
+    storageBucket: "letterstorm-15f1c.firebasestorage.app",
+    messagingSenderId: "1003397295291",
+    appId: "1:1003397295291:web:f6d64c9b3bdcf8a1488d9e",
+    measurementId: "G-E3L2PCLN17"
+  };
 
-// Initialize Firebase using the global firebase object that's loaded from firebase-app-compat.js
-firebase.initializeApp(firebaseConfig);
-
-// If you want analytics (optional)
-if (firebase.analytics) {
-  const analytics = firebase.analytics();
+// Initialize Firebase - this part was missing!
+try {
+  firebase.initializeApp(firebaseConfig);
+  console.log("Firebase initialized successfully");
+} catch (error) {
+  console.error("Error initializing Firebase:", error);
+  alert("Error initializing Firebase. See console for details.");
 }
