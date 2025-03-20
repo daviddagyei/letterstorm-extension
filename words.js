@@ -5,7 +5,6 @@ function initWordMode() {
   const SCREEN_WIDTH = canvas.width;
   const SCREEN_HEIGHT = canvas.height;
 
-  // Further reduced speed for words mode
   let WORD_FALL_SPEED = 1.0;
   const NEW_WORD_INTERVAL = 3000; // Spawn a new word every 3.0 seconds
 
@@ -17,7 +16,10 @@ function initWordMode() {
   let nextLevelScore = 30;
   let gameState = "start"; // "start", "playing", "paused", or "gameover"
   let wordInterval;
-  let currentInput = "";  // Holds the player's typed text
+  let currentInput = "";
+
+  // 1. Load (or initialize) the high score for Word Mode
+  let highScore = parseInt(localStorage.getItem("wordModeHighScore")) || 0;
 
   const backgroundImage = new Image();
   backgroundImage.src = "background.png";
@@ -29,13 +31,10 @@ function initWordMode() {
   const GLOW_COLOR = "#00ffff";
   let WORDS_LIST = [];
 
-  // Load a large dictionary from an external JSON file.
   fetch(chrome.runtime.getURL('words_dictionary.json'))
     .then(response => response.json())
     .then(data => {
       WORDS_LIST = Object.keys(data);
-      // Optionally filter by word length:
-      // WORDS_LIST = WORDS_LIST.filter(word => word.length >= 3 && word.length <= 10);
     })
     .catch(error => console.error('Error loading dictionary:', error));
 
@@ -98,33 +97,39 @@ function initWordMode() {
 
   function drawHUD() {
     ctx.save();
-    const hudGradient = ctx.createLinearGradient(5, 5, 5, 105);
+    const hudGradient = ctx.createLinearGradient(5, 5, 5, 130);
     hudGradient.addColorStop(0, "#111");
     hudGradient.addColorStop(1, "#333");
     ctx.globalAlpha = 0.8;
     ctx.fillStyle = hudGradient;
-    ctx.fillRect(5, 5, 180, 100);
+    // Make this HUD area a bit taller to fit the new "High Score" line
+    ctx.fillRect(5, 5, 220, 130);
     ctx.strokeStyle = "#00ffff";
     ctx.lineWidth = 2;
-    ctx.strokeRect(5, 5, 180, 100);
+    ctx.strokeRect(5, 5, 220, 130);
     ctx.restore();
 
     ctx.font = "24px 'Orbitron', sans-serif";
     ctx.textAlign = "left";
     ctx.shadowColor = "blue";
     ctx.shadowBlur = 10;
-    
+
+    // 2. Display the high score at the top
+    ctx.fillStyle = "#00ffff";
+    ctx.fillText(`High Score: ${highScore}`, 15, 35);
+
     ctx.fillStyle = "white";
-    ctx.fillText(`Score: ${score}`, 15, 35);
-    
+    ctx.fillText(`Score: ${score}`, 15, 65);
+
     ctx.fillStyle = "red";
-    ctx.fillText(`Missed: ${missedWords}`, 15, 65);
-    
+    ctx.fillText(`Missed: ${missedWords}`, 15, 95);
+
     ctx.fillStyle = "yellow";
-    ctx.fillText(`Level: ${level}`, 15, 95);
-    
+    ctx.fillText(`Level: ${level}`, 15, 125);
+
     ctx.shadowBlur = 0;
-    
+
+    // Show current typed text along bottom center
     ctx.font = "32px 'Orbitron', sans-serif";
     ctx.textAlign = "center";
     ctx.fillStyle = "white";
@@ -188,13 +193,13 @@ function initWordMode() {
         }
       }
     }
-    
+
     if (score >= nextLevelScore) {
       level++;
       nextLevelScore += 30;
-      WORD_FALL_SPEED += 0.25; // Increase speed gradually by 0.25
+      WORD_FALL_SPEED += 0.25;
     }
-    
+
     for (let i = particles.length - 1; i >= 0; i--) {
       particles[i].update();
       if (particles[i].alpha <= 0) {
@@ -206,7 +211,7 @@ function initWordMode() {
   function draw() {
     ctx.clearRect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
     ctx.drawImage(backgroundImage, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
-    
+
     words.forEach(word => word.draw());
     particles.forEach(p => p.draw());
     drawHUD();
@@ -220,7 +225,7 @@ function initWordMode() {
     }
   }
 
-  // Global pause/resume functions.
+  // Pause/Resume
   window.pauseCurrentGame = function() {
     if (gameState === "playing") {
       gameState = "paused";
@@ -234,17 +239,21 @@ function initWordMode() {
     }
   };
 
-  // Process key input; no Enter key required.
   document.addEventListener("keydown", function wordModeKeyHandler(e) {
     if (gameState === "start") {
+      // Unlock audio
       scoreSound.play().then(() => {
         scoreSound.pause();
         scoreSound.currentTime = 0;
-      }).catch((error) => { console.error("Audio unlock error:", error); });
+      }).catch((error) => {
+        console.error("Audio unlock error:", error);
+      });
       wrongSound.play().then(() => {
         wrongSound.pause();
         wrongSound.currentTime = 0;
-      }).catch((error) => { console.error("Audio unlock error for wrongSound:", error); });
+      }).catch((error) => {
+        console.error("Audio unlock error for wrongSound:", error);
+      });
       gameState = "playing";
       resetGame();
       startWordSpawn();
@@ -255,6 +264,7 @@ function initWordMode() {
       } else if (/^[a-zA-Z]$/.test(e.key)) {
         currentInput += e.key;
       }
+
       if (currentInput.length > 0) {
         let anyPrefix = false;
         let exactMatchIndex = -1;
@@ -273,12 +283,23 @@ function initWordMode() {
           createExplosion(words[exactMatchIndex].x + 20, words[exactMatchIndex].y - 20);
           words.splice(exactMatchIndex, 1);
           score++;
+
+          // 3. Check for new high score
+          if (score > highScore) {
+            highScore = score;
+            localStorage.setItem("wordModeHighScore", highScore);
+          }
+
           scoreSound.currentTime = 0;
-          scoreSound.play().catch((error) => { console.error("Audio playback error:", error); });
+          scoreSound.play().catch((error) => {
+            console.error("Audio playback error:", error);
+          });
           currentInput = "";
         } else if (!anyPrefix) {
           wrongSound.currentTime = 0;
-          wrongSound.play().catch((error) => { console.error("Wrong sound playback error:", error); });
+          wrongSound.play().catch((error) => {
+            console.error("Wrong sound playback error:", error);
+          });
           currentInput = "";
         }
       }
