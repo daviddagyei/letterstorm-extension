@@ -1,0 +1,31 @@
+# Environment variables and secrets
+.env
+.env.local
+.env.development
+.env.production
+*.secret.*
+*secret*
+service-account*.json
+
+# IDE and editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Logs
+logs
+*.log
+npm-debug.log*
+
+# Dependencies
+node_modules/
+package-lock.json
+
+# Build output
+/dist/
+/build/
+
+# Temporary files
+.tmp/
+.cache/
