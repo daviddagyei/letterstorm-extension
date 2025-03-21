@@ -1,90 +1,182 @@
+/* 
+ * login.css
+ * Dark background on body, 
+ * an animated "particle" effect behind the .container
+ * at a fixed 340px width, no scrolling needed.
+ */
+
+/* BODY */
 body {
-  font-family: 'Arial', sans-serif;
-  background-color: #f5f5f5;
   margin: 0;
   padding: 0;
+  height: 100vh;
+  /* Center container vertically & horizontally */
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh;
-  color: #333;
+
+  /* Use the futuristic Orbitron font if loaded in HTML */
+  font-family: 'Orbitron', sans-serif;
+  color: #EEE;
+
+  /* Simple dark background, no scrolling */
+  background-color: #0B0B28;
+  overflow: hidden;
 }
 
+/* CONTAINER: the main "popup" for login/ signup */
 .container {
-  background-color: white;
-  border-radius: 10px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-  padding: 30px;
   width: 340px;
+  padding: 30px;
+  border-radius: 10px;
   text-align: center;
+
+  /* More translucent so we see the particles behind it */
+  background-color: rgba(20, 20, 40, 0.0);
+  
+  border: 2px solid #00ffff;
+  box-shadow: 0 0 20px rgba(0, 255, 255, 0.2);
+
+  position: relative; /* allow pseudo-element behind it */
+  overflow: hidden;   /* no scroll bars, hide the overflow */
 }
 
+/* PARTICLE ANIMATION PSEUDO-ELEMENT */
+.container::before {
+  content: "";
+  position: absolute;
+  top: 0; 
+  left: 0; 
+  right: 0; 
+  bottom: 0;
+  z-index: -1;
+  
+  /* We define multiple radial gradients that move upward. */
+  background:
+    radial-gradient(circle at 20% 120%, #00ffff 8px, transparent 9px),
+    radial-gradient(circle at 40% 130%, #ff00ff 8px, transparent 9px),
+    radial-gradient(circle at 60% 140%, #ffff00 6px, transparent 7px),
+    radial-gradient(circle at 80% 125%, #00ff00 8px, transparent 9px),
+    radial-gradient(circle at 30% 150%, #ffffff 6px, transparent 7px),
+    radial-gradient(circle at 70% 140%, #66ffff 8px, transparent 9px);
+  background-repeat: no-repeat;
+  opacity: 1; /* easier to see the circles */
+
+  /* Animate them from below the container to above it */
+  animation: floatParticles 5s linear infinite;
+}
+
+@keyframes floatParticles {
+  0% {
+    background-position:
+      20% 120%,
+      40% 130%,
+      60% 140%,
+      80% 125%,
+      30% 150%,
+      70% 140%;
+  }
+  100% {
+    background-position:
+      20% -30%,
+      40% -40%,
+      60% -50%,
+      80% -35%,
+      30% -60%,
+      70% -50%;
+  }
+}
+
+/* HEADINGS */
 h1 {
   margin-top: 0;
-  color: #4285f4;
+  font-size: 2em;
+  color: #00ffff; /* Neon accent color for main title */
 }
 
+h2 {
+  margin-bottom: 20px;
+  font-size: 1.5em;
+  color: #fff;
+}
+
+/* SCREENS */
 .screen {
   display: none;
 }
-
 .active {
   display: block;
 }
 
+/* BUTTONS */
 .button-container {
   display: flex;
   flex-direction: column;
   gap: 15px;
   margin-top: 20px;
 }
-
 .btn {
   padding: 12px;
+  margin: 5px 0;
   border: none;
   border-radius: 5px;
-  background-color: #4285f4;
-  color: white;
+  background: #00ffff;
+  color: #000;
   font-size: 16px;
   cursor: pointer;
-  transition: background-color 0.3s;
+  transition: all 0.3s ease;
+  font-weight: 600;
 }
-
 .btn:hover {
-  background-color: #3367d6;
+  background: #66ffff;
+  box-shadow: 0 0 10px #66ffff, 0 0 20px #66ffff;
 }
 
+/* FORM & LABELS */
 .form-control {
   margin-bottom: 15px;
   text-align: left;
 }
-
-label {
+.form-control label {
   display: block;
   margin-bottom: 5px;
-  font-weight: bold;
+  font-weight: 600;
+  color: #00ffff;
+  font-size: 0.9em;
 }
 
+/* INPUTS */
 input {
   width: 100%;
   padding: 10px;
-  border: 1px solid #ddd;
+  border: 1px solid #444;
   border-radius: 5px;
+  background-color: #222;
+  color: #FFF;
   box-sizing: border-box;
+  font-size: 0.9em;
+  outline: none;
+}
+input:focus {
+  border-color: #00ffff;
+  box-shadow: 0 0 5px #00ffff;
 }
 
+/* ERROR MESSAGE */
 .error-message {
-  color: #d93025;
+  color: #ff4040;
   font-size: 14px;
   margin: 10px 0;
   min-height: 20px;
 }
 
+/* LINKS */
 a {
-  color: #4285f4;
+  color: #00ffff;
   text-decoration: none;
+  transition: color 0.2s;
 }
-
 a:hover {
   text-decoration: underline;
+  color: #66ffff;
 }
