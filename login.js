@@ -15,6 +15,7 @@ document.addEventListener('DOMContentLoaded', () => {
   
   const guestButton = document.getElementById('guest-button');
   const loginOptionButton = document.getElementById('login-option-button');
+  const scoreboardButton = document.getElementById('scoreboard-button');
   const gotoSignupLink = document.getElementById('goto-signup');
   const gotoLoginLink = document.getElementById('goto-login');
   const backToWelcome1 = document.getElementById('back-to-welcome-1');
@@ -43,6 +44,12 @@ document.addEventListener('DOMContentLoaded', () => {
   loginOptionButton.addEventListener('click', () => {
     console.log("Play as user clicked");
     showScreen(loginScreen);
+  });
+  
+  // View scoreboard
+  scoreboardButton.addEventListener('click', () => {
+    console.log("View scoreboard clicked");
+    window.location.href = 'scoreboard.html';
   });
 
   // Navigation between screens

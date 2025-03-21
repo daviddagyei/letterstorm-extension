@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>LetterStorm - Global Scoreboard</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap">
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Orbitron', sans-serif;
+      background-color: #0B0B28;
+      color: #EEE;
+      width: 500px;
+      height: 600px;
+      overflow-y: auto;
+    }
+    
+    .container {
+      width: 100%;
+      height: 100%;
+      padding: 20px;
+      box-sizing: border-box;
+    }
+    
+    h1 {
+      text-align: center;
+      color: #00ffff;
+      margin-bottom: 20px;
+    }
+    
+    .tabs {
+      display: flex;
+      margin-bottom: 20px;
+    }
+    
+    .tab {
+      flex: 1;
+      padding: 10px;
+      text-align: center;
+      background-color: #222;
+      cursor: pointer;
+      border: 1px solid #333;
+    }
+    
+    .tab.active {
+      background-color: #00ffff;
+      color: #000;
+    }
+    
+    .scoreboard {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+    
+    .scoreboard th, .scoreboard td {
+      padding: 12px;
+      text-align: left;
+      border-bottom: 1px solid #333;
+    }
+    
+    .scoreboard th {
+      background-color: #000;
+      color: #00ffff;
+    }
+    
+    .scoreboard tr:nth-child(even) {
+      background-color: rgba(0,0,0,0.3);
+    }
+    
+    .scoreboard .rank {
+      text-align: center;
+      font-weight: bold;
+    }
+    
+    .scoreboard .score {
+      text-align: right;
+      color: #00ffff;
+      font-weight: bold;
+    }
+    
+    .back-btn {
+      display: block;
+      width: 100px;
+      margin: 20px auto;
+      padding: 10px;
+      background-color: #00ffff;
+      color: #000;
+      text-align: center;
+      text-decoration: none;
+      border-radius: 5px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    
+    .back-btn:hover {
+      background-color: #66ffff;
+    }
+    
+    .loading {
+      text-align: center;
+      margin: 40px 0;
+      font-style: italic;
+      color: #999;
+    }
+    
+    .error {
+      text-align: center;
+      margin: 40px 0;
+      color: #ff4040;
+    }
+    
+    .trophy-gold {
+      color: gold;
+    }
+    
+    .trophy-silver {
+      color: silver;
+    }
+    
+    .trophy-bronze {
+      color: #cd7f32;
+    }
+  </style>
+  <script src="lib/firebase-app-compat.js"></script>
+  <script src="lib/firebase-auth-compat.js"></script>
+  <script src="lib/firebase-firestore-compat.js"></script>
+  <script src="firebase-config.js"></script>
+</head>
+<body>
+  <div class="container">
+    <h1>Global Scoreboard</h1>
+    
+    <div class="tabs">
+      <div class="tab active" data-mode="letterMode">Letter Mode</div>
+      <div class="tab" data-mode="wordMode">Word Mode</div>
+    </div>
+    
+    <div id="scoreboard-container" class="scoreboard-container">
+      <div class="loading">Loading scores...</div>
+    </div>
+    
+    <a href="login.html" class="back-btn">Back</a>
+  </div>
+  
+  <script src="scoreboard.js"></script>
+</body>
+</html>

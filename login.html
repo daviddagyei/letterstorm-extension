@@ -5,7 +5,6 @@
   <title>LetterStorm - Login</title>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap">
   <link rel="stylesheet" href="login.css">
-
 </head>
 <body>
   <div class="container">
@@ -16,6 +15,7 @@
       <div class="button-container">
         <button id="guest-button" class="btn">Play as Guest</button>
         <button id="login-option-button" class="btn">Play as User</button>
+        <button id="scoreboard-button" class="btn btn-secondary">View Global Score Board</button>
       </div>
     </div>
     
@@ -60,24 +60,18 @@
     </div>
   </div>
   
-  <!-- Load scripts at the end of body for better performance -->
-  <!-- First load Firebase SDK -->
   <script src="lib/firebase-app-compat.js"></script>
   <script src="lib/firebase-auth-compat.js"></script>
   <script src="lib/firebase-firestore-compat.js"></script>
   
-  <!-- Then initialize Firebase -->
   <script src="firebase-config.js"></script>
   
-  <!-- Make sure Firebase is ready before loading auth.js -->
   <script>
-    // Check if Firebase is loaded
     if (typeof firebase === 'undefined') {
       document.body.innerHTML = '<div style="color: red; padding: 20px;">Error: Firebase SDK not loaded. Please check your network connection and try again.</div>';
     } else {
       console.log("Firebase SDK loaded successfully");
       
-      // Check if Firebase Auth is available
       if (firebase.auth) {
         console.log("Firebase Auth is available");
       } else {
@@ -86,13 +80,10 @@
     }
   </script>
   
-  <!-- Then load auth logic -->
   <script src="auth.js"></script>
   
-  <!-- Load scores manager -->
   <script src="scores-manager.js"></script>
   
-  <!-- Finally load the login logic that uses auth.js -->
   <script src="login.js"></script>
 </body>
 </html>

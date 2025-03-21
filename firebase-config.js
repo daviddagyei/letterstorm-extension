@@ -1,4 +1,3 @@
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
     apiKey: "AIzaSyC0suai5DOTZxN2uLe2AmC6-obhVriL3uc",
     authDomain: "letterstorm-15f1c.firebaseapp.com",
@@ -7,9 +6,8 @@ const firebaseConfig = {
     messagingSenderId: "1003397295291",
     appId: "1:1003397295291:web:f6d64c9b3bdcf8a1488d9e",
     measurementId: "G-E3L2PCLN17"
-  };
+};
 
-// Initialize Firebase - this part was missing!
 try {
   firebase.initializeApp(firebaseConfig);
   console.log("Firebase initialized successfully");

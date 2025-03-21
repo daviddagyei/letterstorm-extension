@@ -22,6 +22,24 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById("modeOverlay").style.display = "flex";
   });
 
+  // Add event listener for the Return to Home Page button
+  document.getElementById("returnToHome").addEventListener("click", () => {
+    console.log("Returning to home page...");
+    
+    // Clear user data from localStorage
+    localStorage.removeItem('user');
+    
+    // If the user is logged in with Firebase, sign them out
+    if (firebase && firebase.auth) {
+      firebase.auth().signOut().catch(error => {
+        console.error("Error signing out:", error);
+      });
+    }
+    
+    // Redirect to login page
+    window.location.href = 'login.html';
+  });
+
   document.getElementById("letterMode").addEventListener("click", () => {
     document.getElementById("modeOverlay").style.display = "none";
     // Re-show the canvas

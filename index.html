@@ -98,6 +98,19 @@
       background: #2196F3;
       color: white;
     }
+    /* Return to home button styling */
+    .return-home-btn {
+      background: #ff00ff;
+      color: white;
+      margin-top: 30px; /* Add space above the button */
+      transition: all 0.3s ease;
+    }
+    
+    .return-home-btn:hover {
+      background: #ff66ff;
+      box-shadow: 0 0 10px #ff66ff;
+      transform: scale(1.05);
+    }
     /* Pause overlay styling */
     #pauseOverlay {
       position: absolute;
@@ -198,6 +211,8 @@
     <h2>Select Game Mode</h2>
     <button id="letterMode">Typing Letters</button>
     <button id="wordMode">Typing Words</button>
+    <!-- Add return to home button -->
+    <button id="returnToHome" class="return-home-btn">Return to Home Page</button>
   </div>
   
   <!-- Pause overlay -->

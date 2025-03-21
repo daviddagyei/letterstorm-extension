@@ -132,6 +132,17 @@ h2 {
   box-shadow: 0 0 10px #66ffff, 0 0 20px #66ffff;
 }
 
+/* Secondary button style for scoreboard */
+.btn-secondary {
+  background: #ff00ff; /* Different color for the scoreboard button */
+  margin-top: 10px;
+}
+
+.btn-secondary:hover {
+  background: #ff66ff;
+  box-shadow: 0 0 10px #ff66ff, 0 0 20px #ff66ff;
+}
+
 /* FORM & LABELS */
 .form-control {
   margin-bottom: 15px;
