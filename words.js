@@ -6,7 +6,7 @@ function initWordMode() {
   const SCREEN_HEIGHT = canvas.height;
 
   let WORD_FALL_SPEED = 1.0;
-  const NEW_WORD_INTERVAL = 3000; // Spawn a new word every 3.0 seconds
+  const NEW_WORD_INTERVAL = 3000; // Spawn a new word every 3 seconds
 
   let words = [];
   let particles = [];
@@ -14,23 +14,26 @@ function initWordMode() {
   let missedWords = 0;
   let level = 1;
   let nextLevelScore = 30;
-  let gameState = "start"; // "start", "playing", "paused", or "gameover"
+
+  // Possible states: "start", "playing", "paused", "gameover"
+  let gameState = "start"; 
   let wordInterval;
   let currentInput = "";
 
-  // 1. Load (or initialize) the high score for Word Mode
+  // Load or initialize the high score for Word Mode
   let highScore = parseInt(localStorage.getItem("wordModeHighScore")) || 0;
 
+  // Background, sounds
   const backgroundImage = new Image();
   backgroundImage.src = "background.png";
-
-  // Load sounds
   const scoreSound = new Audio("score.mp3");
   const wrongSound = new Audio("wrong.mp3");
 
+  // Glow color for shadows
   const GLOW_COLOR = "#00ffff";
-  let WORDS_LIST = [];
 
+  // Word list from external JSON
+  let WORDS_LIST = [];
   fetch(chrome.runtime.getURL('words_dictionary.json'))
     .then(response => response.json())
     .then(data => {
@@ -38,6 +41,9 @@ function initWordMode() {
     })
     .catch(error => console.error('Error loading dictionary:', error));
 
+  // --------------------------------------------------
+  // Particle & Explosion
+  // --------------------------------------------------
   class Particle {
     constructor(x, y) {
       this.x = x;
@@ -71,10 +77,15 @@ function initWordMode() {
     }
   }
 
+  // --------------------------------------------------
+  // Word Class
+  // --------------------------------------------------
   class Word {
     constructor() {
+      // If WORDS_LIST isn't loaded, default to ["hello", "world", "example"]
       let list = WORDS_LIST.length > 0 ? WORDS_LIST : ["hello", "world", "example"];
       this.text = list[Math.floor(Math.random() * list.length)];
+
       ctx.font = "48px 'Orbitron', sans-serif";
       const textWidth = ctx.measureText(this.text).width;
       const maxX = SCREEN_WIDTH - textWidth;
@@ -95,6 +106,9 @@ function initWordMode() {
     }
   }
 
+  // --------------------------------------------------
+  // HUD & Screen Draw
+  // --------------------------------------------------
   function drawHUD() {
     ctx.save();
     const hudGradient = ctx.createLinearGradient(5, 5, 5, 130);
@@ -102,7 +116,6 @@ function initWordMode() {
     hudGradient.addColorStop(1, "#333");
     ctx.globalAlpha = 0.8;
     ctx.fillStyle = hudGradient;
-    // Make this HUD area a bit taller to fit the new "High Score" line
     ctx.fillRect(5, 5, 220, 130);
     ctx.strokeStyle = "#00ffff";
     ctx.lineWidth = 2;
@@ -114,22 +127,18 @@ function initWordMode() {
     ctx.shadowColor = "blue";
     ctx.shadowBlur = 10;
 
-    // 2. Display the high score at the top
     ctx.fillStyle = "#00ffff";
     ctx.fillText(`High Score: ${highScore}`, 15, 35);
-
     ctx.fillStyle = "white";
     ctx.fillText(`Score: ${score}`, 15, 65);
-
     ctx.fillStyle = "red";
     ctx.fillText(`Missed: ${missedWords}`, 15, 95);
-
     ctx.fillStyle = "yellow";
     ctx.fillText(`Level: ${level}`, 15, 125);
 
     ctx.shadowBlur = 0;
 
-    // Show current typed text along bottom center
+    // Show current typed text at bottom center
     ctx.font = "32px 'Orbitron', sans-serif";
     ctx.textAlign = "center";
     ctx.fillStyle = "white";
@@ -170,6 +179,9 @@ function initWordMode() {
     document.getElementById("gameOverlay").style.display = "none";
   }
 
+  // --------------------------------------------------
+  // Reset, Update, Draw, Game Loop
+  // --------------------------------------------------
   function resetGame() {
     words = [];
     particles = [];
@@ -225,7 +237,9 @@ function initWordMode() {
     }
   }
 
-  // Pause/Resume
+  // --------------------------------------------------
+  // Pause/Resume (Exposed Globally)
+  // --------------------------------------------------
   window.pauseCurrentGame = function() {
     if (gameState === "playing") {
       gameState = "paused";
@@ -239,9 +253,12 @@ function initWordMode() {
     }
   };
 
+  // --------------------------------------------------
+  // Keydown Logic (start or typed input)
+  // --------------------------------------------------
   document.addEventListener("keydown", function wordModeKeyHandler(e) {
     if (gameState === "start") {
-      // Unlock audio
+      // Unlock audio in Chrome
       scoreSound.play().then(() => {
         scoreSound.pause();
         scoreSound.currentTime = 0;
@@ -254,10 +271,13 @@ function initWordMode() {
       }).catch((error) => {
         console.error("Audio unlock error for wrongSound:", error);
       });
+
+      // Transition to playing
       gameState = "playing";
       resetGame();
       startWordSpawn();
       requestAnimationFrame(gameLoop);
+
     } else if (gameState === "playing") {
       if (e.key === "Backspace") {
         currentInput = currentInput.slice(0, -1);
@@ -283,13 +303,11 @@ function initWordMode() {
           createExplosion(words[exactMatchIndex].x + 20, words[exactMatchIndex].y - 20);
           words.splice(exactMatchIndex, 1);
           score++;
-
-          // 3. Check for new high score
+          // Update high score
           if (score > highScore) {
             highScore = score;
             localStorage.setItem("wordModeHighScore", highScore);
           }
-
           scoreSound.currentTime = 0;
           scoreSound.play().catch((error) => {
             console.error("Audio playback error:", error);
@@ -306,6 +324,9 @@ function initWordMode() {
     }
   });
 
+  // --------------------------------------------------
+  // Buttons: "Play Again", "Quit", etc.
+  // --------------------------------------------------
   document.getElementById("playAgain").addEventListener("click", () => {
     hideGameOverPopup();
     gameState = "playing";
@@ -320,15 +341,25 @@ function initWordMode() {
     setTimeout(() => window.close(), 1500);
   }
 
-  document.getElementById("quit").addEventListener("click", () => {
+  document.getElementById("mainMenuBtn").addEventListener("click", () => {
     hideGameOverPopup();
-    quitGame();
+    goToMainMenu();
   });
+
+  function goToMainMenu() {
+    document.getElementById("gameCanvas").style.display = "none";
+    document.getElementById("gameOverlay").style.display = "none";
+    document.getElementById("modeOverlay").style.display = "flex";
+  }
+  
 
   document.getElementById("closeBtn").addEventListener("click", () => {
     quitGame();
   });
 
+  // --------------------------------------------------
+  // Start Word Spawn
+  // --------------------------------------------------
   function startWordSpawn() {
     clearInterval(wordInterval);
     wordInterval = setInterval(() => {
@@ -338,9 +369,17 @@ function initWordMode() {
     }, NEW_WORD_INTERVAL);
   }
 
+  // --------------------------------------------------
+  // On background load, show start screen if still "start"
+  // --------------------------------------------------
   backgroundImage.onload = () => {
     if (gameState === "start") {
       startScreen();
     }
+  };
+
+  // *** NEW: Expose a function so main.js can check the current game state
+  window.getCurrentGameState = function() {
+    return gameState;
   };
 }

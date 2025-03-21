@@ -1,5 +1,4 @@
 // main.js
-// Single DOMContentLoaded event listener to handle everything
 document.addEventListener('DOMContentLoaded', () => {
   // Get user from localStorage
   const user = JSON.parse(localStorage.getItem('user'));
@@ -10,67 +9,73 @@ document.addEventListener('DOMContentLoaded', () => {
     return;
   }
   
-  // If the user is logged in (not a guest), you might want to fetch user-specific data
+  // If not a guest user, do something...
   if (!user.isGuest) {
-    // You could fetch user data, high scores, etc. from Firebase here
     console.log(`Logged in as: ${user.displayName || user.email}`);
   } else {
     console.log('Playing as guest');
   }
 
-  // Game initialization - moved from the nested event listener
-  // When the welcome overlay's button is clicked, hide it and show the mode selection.
+  // Welcome overlay -> mode selection
   document.getElementById("openModes").addEventListener("click", () => {
     document.getElementById("welcomeOverlay").style.display = "none";
     document.getElementById("modeOverlay").style.display = "flex";
   });
 
-  // Mode selection: when the user clicks a mode button,
-  // hide the mode overlay and call the corresponding initialization function.
   document.getElementById("letterMode").addEventListener("click", () => {
     document.getElementById("modeOverlay").style.display = "none";
-    window.gameMode = "letters";
+    // Re-show the canvas
+    document.getElementById("gameCanvas").style.display = "block";
+  
     if (typeof initLetterMode === "function") {
       initLetterMode();
-    } else {
-      console.error("initLetterMode() is not defined.");
     }
   });
-
+  
   document.getElementById("wordMode").addEventListener("click", () => {
     document.getElementById("modeOverlay").style.display = "none";
-    window.gameMode = "words";
+    // Re-show the canvas
+    document.getElementById("gameCanvas").style.display = "block";
+  
     if (typeof initWordMode === "function") {
       initWordMode();
-    } else {
-      console.error("initWordMode() is not defined.");
     }
   });
-
-  // Global keydown: assign the space bar to toggle pause/resume.
+  
+  // *** CHANGE ***
+  // Global keydown for space bar: Only pause/resume if the game is "letters" or "words",
+  // AND if our getCurrentGameState() says "playing" or "paused".
   document.addEventListener("keydown", (e) => {
     if (e.key === " ") {
-      e.preventDefault(); // Prevent default space action
-      // Only process pause/resume if a game mode is active.
+      e.preventDefault(); // Prevent scrolling the page with space
       if (window.gameMode === "letters" || window.gameMode === "words") {
-        const pauseOverlay = document.getElementById("pauseOverlay");
-        // If the pause overlay is visible, resume; otherwise, pause.
-        if (pauseOverlay.style.display === "flex") {
-          if (typeof resumeCurrentGame === "function") {
-            resumeCurrentGame();
+
+        // If our letter/word mode code exposes a "getCurrentGameState()"...
+        if (typeof getCurrentGameState === "function") {
+          const currentState = getCurrentGameState();
+
+          if (currentState === "playing") {
+            // Pause the game
+            if (typeof pauseCurrentGame === "function") {
+              pauseCurrentGame();
+            }
+            document.getElementById("pauseOverlay").style.display = "flex";
+
+          } else if (currentState === "paused") {
+            // Resume the game
+            if (typeof resumeCurrentGame === "function") {
+              resumeCurrentGame();
+            }
+            document.getElementById("pauseOverlay").style.display = "none";
           }
-          pauseOverlay.style.display = "none";
-        } else {
-          if (typeof pauseCurrentGame === "function") {
-            pauseCurrentGame();
-          }
-          pauseOverlay.style.display = "flex";
+
+          // If "start" or "gameover", do nothing on space.
         }
       }
     }
   });
 
-  // Resume button in pause overlay.
+  // Resume button
   document.getElementById("resumeBtn").addEventListener("click", () => {
     if (typeof resumeCurrentGame === "function") {
       resumeCurrentGame();
@@ -78,12 +83,12 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById("pauseOverlay").style.display = "none";
   });
 
-  // Back to Menu: reload the page to return to the mode selection.
+  // Back to Menu => reload
   document.getElementById("menuBtn").addEventListener("click", () => {
     window.location.reload();
   });
 
-  // Pause overlay Quit button.
+  // Pause overlay Quit
   document.getElementById("pauseQuit").addEventListener("click", () => {
     if (typeof quitGame === "function") {
       quitGame();
@@ -92,7 +97,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  // Global Close button (quit game).
+  // Global Close button => quit
   document.getElementById("closeBtn").addEventListener("click", () => {
     if (typeof quitGame === "function") {
       quitGame();
