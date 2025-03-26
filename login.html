@@ -30,10 +30,15 @@
           <label for="login-password">Password</label>
           <input type="password" id="login-password" required>
         </div>
+        <div class="form-control" style="display: flex; align-items: center;">
+          <input type="checkbox" id="remember-me" style="width: auto; margin-right: 5px;">
+          <label for="remember-me" style="display: inline; margin-bottom: 0;">Remember Email</label>
+        </div>
         <div class="error-message" id="login-error"></div>
         <button type="submit" class="btn">Login</button>
       </form>
       <p>Don't have an account? <a href="#" id="goto-signup">Create one</a></p>
+      <p>Forgot your password? <a href="forgot-password.html">Reset it here</a></p>
       <p><a href="#" id="back-to-welcome-1">Back</a></p>
     </div>
     
@@ -60,30 +65,18 @@
     </div>
   </div>
   
+  <!-- Load Firebase and other external scripts -->
   <script src="lib/firebase-app-compat.js"></script>
   <script src="lib/firebase-auth-compat.js"></script>
   <script src="lib/firebase-firestore-compat.js"></script>
-  
   <script src="firebase-config.js"></script>
   
-  <script>
-    if (typeof firebase === 'undefined') {
-      document.body.innerHTML = '<div style="color: red; padding: 20px;">Error: Firebase SDK not loaded. Please check your network connection and try again.</div>';
-    } else {
-      console.log("Firebase SDK loaded successfully");
-      
-      if (firebase.auth) {
-        console.log("Firebase Auth is available");
-      } else {
-        document.body.innerHTML = '<div style="color: red; padding: 20px;">Error: Firebase Auth not loaded. Please check your extensions permissions.</div>';
-      }
-    }
-  </script>
+  <!-- Load our initialization script that replaces inline scripts -->
+  <script src="login-init.js"></script>
   
+  <!-- Load application logic scripts -->
   <script src="auth.js"></script>
-  
   <script src="scores-manager.js"></script>
-  
   <script src="login.js"></script>
 </body>
 </html>
