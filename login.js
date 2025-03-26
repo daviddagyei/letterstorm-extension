@@ -16,6 +16,8 @@ document.addEventListener('DOMContentLoaded', () => {
   const guestButton = document.getElementById('guest-button');
   const loginOptionButton = document.getElementById('login-option-button');
   const scoreboardButton = document.getElementById('scoreboard-button');
+  // Comment out the next line to avoid the error
+  // const forgotPasswordLink = document.getElementById('forgot-password');
   const gotoSignupLink = document.getElementById('goto-signup');
   const gotoLoginLink = document.getElementById('goto-login');
   const backToWelcome1 = document.getElementById('back-to-welcome-1');
@@ -52,6 +54,23 @@ document.addEventListener('DOMContentLoaded', () => {
     window.location.href = 'scoreboard.html';
   });
 
+  // Comment out the problematic forgot password event listener
+  /* 
+  forgotPasswordLink.addEventListener('click', (e) => {
+    e.preventDefault();
+    
+    // Get email from login form, if any
+    const email = document.getElementById('login-email').value;
+    
+    // Redirect to forgot password page with email as query param if available
+    if (email) {
+      window.location.href = `forgot-password.html?email=${encodeURIComponent(email)}`;
+    } else {
+      window.location.href = 'forgot-password.html';
+    }
+  });
+  */
+
   // Navigation between screens
   gotoSignupLink.addEventListener('click', (e) => {
     e.preventDefault();
@@ -78,9 +97,17 @@ document.addEventListener('DOMContentLoaded', () => {
     e.preventDefault();
     const email = document.getElementById('login-email').value;
     const password = document.getElementById('login-password').value;
+    const rememberMe = document.getElementById('remember-me').checked;
     loginError.textContent = '';
     
     console.log("Attempting to log in with:", email);
+    
+    // Remember email if requested
+    if (rememberMe) {
+      localStorage.setItem('rememberedEmail', email);
+    } else {
+      localStorage.removeItem('rememberedEmail');
+    }
     
     // Direct Firebase login
     firebase.auth().signInWithEmailAndPassword(email, password)
@@ -149,4 +176,13 @@ document.addEventListener('DOMContentLoaded', () => {
       startGame(user);
     }
   });
+
+  // Check for remembered email
+  const rememberedEmail = localStorage.getItem('rememberedEmail');
+  if (rememberedEmail) {
+    document.getElementById('login-email').value = rememberedEmail;
+    if (document.getElementById('remember-me')) {
+      document.getElementById('remember-me').checked = true;
+    }
+  }
 });

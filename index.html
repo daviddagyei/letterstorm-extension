@@ -98,6 +98,10 @@
       background: #2196F3;
       color: white;
     }
+    #sentenceMode {
+      background: #FF9800;
+      color: white;
+    }
     /* Return to home button styling */
     .return-home-btn {
       background: #ff00ff;
@@ -105,7 +109,6 @@
       margin-top: 30px; /* Add space above the button */
       transition: all 0.3s ease;
     }
-    
     .return-home-btn:hover {
       background: #ff66ff;
       box-shadow: 0 0 10px #ff66ff;
@@ -181,6 +184,10 @@
       background: #f44336;
       color: white;
     }
+    #mainMenuBtn {
+      background: #607d8b;
+      color: white;
+    }
     /* Control buttons (Close only) */
     #closeBtn {
       position: absolute;
@@ -211,6 +218,7 @@
     <h2>Select Game Mode</h2>
     <button id="letterMode">Typing Letters</button>
     <button id="wordMode">Typing Words</button>
+    <button id="sentenceMode">Typing Sentences</button>
     <!-- Add return to home button -->
     <button id="returnToHome" class="return-home-btn">Return to Home Page</button>
   </div>
@@ -223,28 +231,32 @@
     <button id="pauseQuit">Quit</button>
   </div>
   
-  <!-- Game over overlay (shared by both modes) -->
+  <!-- Game over overlay (shared by all modes) -->
   <div id="gameOverlay">
     <div id="popup">
       <h2 id="popupTitle">Game Over</h2>
       <p id="popupScore"></p>
       <button id="playAgain">Play Again</button>
       <button id="mainMenuBtn">Main Menu</button>
+      <button id="quit">Quit</button>
     </div>
   </div>
   
-  <!-- Load Firebase -->
+  <!-- The Firebase scripts (v8 compat approach) -->
   <script src="lib/firebase-app-compat.js"></script>
   <script src="lib/firebase-auth-compat.js"></script>
   <script src="lib/firebase-firestore-compat.js"></script>
   <script src="firebase-config.js"></script>
   
-  <!-- Load scores manager before game logic -->
+  <!-- Optionally a scores-manager.js if you have it -->
   <script src="scores-manager.js"></script>
   
-  <!-- Load external scripts -->
+  <!-- Our modes: game.js (letters), words.js, sentences.js -->
   <script src="game.js"></script>
   <script src="words.js"></script>
+  <script src="sentences.js"></script>
+  
+  <!-- The main logic that sets up event listeners -->
   <script src="main.js"></script>
 </body>
 </html>

@@ -1,22 +1,37 @@
 {
   "manifest_version": 3,
   "name": "LetterStorm",
-  "version": "1.0.0",
-  "description": "A word game Chrome extension with Firebase authentication",
-  "permissions": [
-    "storage"
-  ],
+  "version": "1.0",
+  "description": "A typing game to improve your typing speed and accuracy",
+  "permissions": [],
+  "content_security_policy": {
+    "extension_pages": "script-src 'self'; object-src 'self'"
+  },
   "action": {
     "default_popup": "login.html"
   },
+  "background": {
+    "service_worker": "background.js"
+  },
   "web_accessible_resources": [
     {
-      "resources": ["words_dictionary.json", "background.png", "score.mp3", "wrong.mp3"],
+      "resources": [
+        "index.html",
+        "login.html",
+        "forgot-password.html",
+        "scoreboard.html",
+        "lib/*",
+        "*.js",
+        "*.css"
+      ],
       "matches": ["<all_urls>"]
     }
   ],
   "host_permissions": [
     "https://*.firebaseio.com/",
     "https://*.googleapis.com/"
-  ]
+  ],
+  "externally_connectable": {
+    "matches": ["*://*.firebaseapp.com/*", "*://*.web.app/*"]
+  }
 }
