@@ -8,20 +8,44 @@ function initSentenceMode() {
     const SCREEN_WIDTH = canvas.width;
     const SCREEN_HEIGHT = canvas.height;
   
-    // Game states: "start", "playing", "paused", "gameover"
     let gameState = "start";
   
-    // A sample set of sentences
-    let sentences = [
-      "Hello world",
-      "Short but tricky",
-      "This is a test to ensure that longer sentences fit the screen properly",
-      "Practice makes perfect",
-      "Three misses means game over"
-    ];
+    // Try to get AI-generated sentences first
+    let sentences = [];
+    if (window.sentenceGenerator) {
+        try {
+            sentences = window.sentenceGenerator.getImmediateSentences(15);
+            console.log("AI sentences loaded:", sentences);
+        } catch (error) {
+            console.error("Error loading AI sentences:", error);
+        }
+    }
+    
+    // If no AI sentences available, use fallbacks
+    if (!sentences || !Array.isArray(sentences) || sentences.length === 0) {
+        console.log("No AI sentences available, using fallbacks");
+        sentences = [
+            "The quick brown fox jumps over the lazy dog.",
+            "All that glitters is not gold.",
+            "Actions speak louder than words.",
+            "A picture is worth a thousand words.",
+            "The early bird catches the worm.",
+            "Don't count your chickens before they hatch.",
+            "Practice makes perfect.",
+            "Time flies when you're having fun.", 
+            "Better late than never.",
+            "Two wrongs don't make a right."
+        ];
+    }
   
     let currentSentence = "";
     let typedIndex = 0;
+  
+    // Debug logging
+    const DEBUG = true;
+    function log(msg) {
+        if (DEBUG) console.log(`[Sentence Mode] ${msg}`);
+    }
   
     const SENTENCE_TIME = 10000; // 10 seconds allowed per sentence
     let typedTimeLeft = 0;
@@ -45,15 +69,48 @@ function initSentenceMode() {
   
     // We store the chosen font size so the sentence fits
     let sentenceFontSize = 48;
+    
+    // Refresh sentences periodically based on level
+    function refreshSentencesList() {
+        if (!window.sentenceGenerator) return;
+        
+        let difficulty = "medium";
+        if (level <= 2) difficulty = "easy";
+        else if (level >= 5) difficulty = "hard";
+            
+        log(`Refreshing sentences with difficulty: ${difficulty}`);
+        
+        window.sentenceGenerator.fetchSentences(15, difficulty)
+            .then(newSentences => {
+                if (newSentences && newSentences.length > 0) {
+                    log(`Got ${newSentences.length} new sentences from AI`);
+                    sentences = newSentences;
+                }
+            })
+            .catch(err => {
+                log(`Error fetching sentences: ${err.message}`);
+            });
+    }
   
     // ------------------------------------------------------------
     // spawnNewSentence & dynamic font
     // ------------------------------------------------------------
     function spawnNewSentence() {
-      currentSentence = sentences[Math.floor(Math.random() * sentences.length)];
-      typedIndex = 0;
-      typedTimeLeft = SENTENCE_TIME;
-      sentenceFontSize = pickFittingFontSize(currentSentence);
+        if (level > 1 && window.sentenceGenerator) {
+            refreshSentencesList();
+        }
+        
+        if (sentences && sentences.length > 0) {
+            currentSentence = sentences[Math.floor(Math.random() * sentences.length)];
+            log(`New sentence: "${currentSentence}"`);
+        } else {
+            currentSentence = "This is a default sentence.";
+            log("No sentences available, using default");
+        }
+        
+        typedIndex = 0;
+        typedTimeLeft = SENTENCE_TIME;
+        sentenceFontSize = pickFittingFontSize(currentSentence);
     }
   
     // picks a font size so the sentence fits within ~80% of the canvas width
@@ -149,7 +206,23 @@ function initSentenceMode() {
       missed = 0;
       level = 1;
       nextLevelScore = 30;
-      spawnNewSentence();
+      
+      // Try to refresh sentences at game start
+      if (window.sentenceGenerator) {
+          window.sentenceGenerator.fetchSentences(15, "medium")
+              .then(newSentences => {
+                  if (newSentences && newSentences.length > 0) {
+                      sentences = newSentences;
+                      log("Refreshed sentences for new game");
+                  }
+                  spawnNewSentence();
+              })
+              .catch(() => {
+                  spawnNewSentence();
+              });
+      } else {
+          spawnNewSentence();
+      }
     }
   
     // ------------------------------------------------------------
@@ -169,7 +242,9 @@ function initSentenceMode() {
   
       if (score >= nextLevelScore) {
         level++;
+        log(`Level up to ${level}`);
         nextLevelScore += 30;
+        refreshSentencesList();
       }
     }
   
@@ -178,8 +253,6 @@ function initSentenceMode() {
       ctx.drawImage(backgroundImage, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
   
       drawHUD();
-  
-      // We'll draw the entire sentence faint first, then the typed portion in bright.
   
       // We'll do left alignment for the text, but center it by offset
       ctx.font = `${sentenceFontSize}px 'Orbitron', sans-serif`;
@@ -197,11 +270,16 @@ function initSentenceMode() {
   
       // typed portion in bright color
       const typedPart = currentSentence.substring(0, typedIndex);
-  
-      ctx.shadowColor = GLOW_COLOR;
-      ctx.shadowBlur = 20;
-      ctx.fillStyle = "#fff";
-      ctx.fillText(typedPart, centerX, centerY);
+      
+      // Only draw the typed part if there is one
+      if (typedIndex > 0) {
+          log(`Drawing typed part: "${typedPart}" (${typedIndex}/${currentSentence.length})`);
+          
+          ctx.shadowColor = GLOW_COLOR;
+          ctx.shadowBlur = 20;
+          ctx.fillStyle = "#fff";
+          ctx.fillText(typedPart, centerX, centerY);
+      }
     }
   
     function gameLoop() {
@@ -256,8 +334,15 @@ function initSentenceMode() {
         // just typed a char, no pause since we do ctrl in main.js
         if (e.key && e.key.length === 1) {
           const expectedChar = currentSentence.charAt(typedIndex);
+          log(`Key pressed: "${e.key}", Expected: "${expectedChar}"`);
+          
           if (e.key === expectedChar) {
             typedIndex++;
+            log(`Correct! typedIndex now ${typedIndex}`);
+            
+            // Force a draw update immediately for better feedback
+            draw();
+            
             if (typedIndex >= currentSentence.length) {
               score++;
               if (score > highScore) {
@@ -309,8 +394,24 @@ function initSentenceMode() {
       }
     };
   
-    console.log("Sentence Mode loaded!");
-  }
+    // Force immediate refresh of AI sentences
+    if (window.sentenceGenerator) {
+        log("Requesting initial AI sentences");
+        window.sentenceGenerator.fetchSentences(15)
+            .then(newSentences => {
+                if (newSentences && newSentences.length > 0) {
+                    log(`Got ${newSentences.length} initial sentences from AI`);
+                    sentences = newSentences;
+                }
+            })
+            .catch(error => {
+                log(`Error getting initial sentences: ${error.message}`);
+            });
+    } else {
+        log("No sentence generator available");
+    }
+    
+    log("Sentence Mode loaded!");
+}
   
-  window.initSentenceMode = initSentenceMode;
-  
+window.initSentenceMode = initSentenceMode;

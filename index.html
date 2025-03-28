@@ -242,21 +242,24 @@
     </div>
   </div>
   
-  <!-- The Firebase scripts (v8 compat approach) -->
+  <!-- Update the scripts section to load in correct order -->
+  
+  <!-- Load Firebase scripts first -->
   <script src="lib/firebase-app-compat.js"></script>
   <script src="lib/firebase-auth-compat.js"></script>
   <script src="lib/firebase-firestore-compat.js"></script>
   <script src="firebase-config.js"></script>
   
-  <!-- Optionally a scores-manager.js if you have it -->
-  <script src="scores-manager.js"></script>
+  <!-- Add AI model config and API -->
+  <script src="lib/ai_model/config.js"></script>
+  <script src="lib/ai_model/sentence_api.js"></script>
+  <script src="sentence-initializer.js"></script>
   
-  <!-- Our modes: game.js (letters), words.js, sentences.js -->
+  <!-- Other game scripts -->
+  <script src="scores-manager.js"></script>
   <script src="game.js"></script>
   <script src="words.js"></script>
   <script src="sentences.js"></script>
-  
-  <!-- The main logic that sets up event listeners -->
   <script src="main.js"></script>
 </body>
 </html>

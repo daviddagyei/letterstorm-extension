@@ -30,6 +30,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Helper to show a specific screen
   function showScreen(screen) {
+    console.log("Switching to screen:", screen.id);
     welcomeScreen.classList.remove('active');
     loginScreen.classList.remove('active');
     signupScreen.classList.remove('active');
@@ -53,23 +54,6 @@ document.addEventListener('DOMContentLoaded', () => {
     console.log("View scoreboard clicked");
     window.location.href = 'scoreboard.html';
   });
-
-  // Comment out the problematic forgot password event listener
-  /* 
-  forgotPasswordLink.addEventListener('click', (e) => {
-    e.preventDefault();
-    
-    // Get email from login form, if any
-    const email = document.getElementById('login-email').value;
-    
-    // Redirect to forgot password page with email as query param if available
-    if (email) {
-      window.location.href = `forgot-password.html?email=${encodeURIComponent(email)}`;
-    } else {
-      window.location.href = 'forgot-password.html';
-    }
-  });
-  */
 
   // Navigation between screens
   gotoSignupLink.addEventListener('click', (e) => {
@@ -109,6 +93,11 @@ document.addEventListener('DOMContentLoaded', () => {
       localStorage.removeItem('rememberedEmail');
     }
     
+    // Show loading state
+    const submitBtn = loginForm.querySelector('button[type="submit"]');
+    submitBtn.disabled = true;
+    submitBtn.textContent = "Logging in...";
+    
     // Direct Firebase login
     firebase.auth().signInWithEmailAndPassword(email, password)
       .then((userCredential) => {
@@ -118,12 +107,17 @@ document.addEventListener('DOMContentLoaded', () => {
       .catch((error) => {
         console.error("Login error:", error.code, error.message);
         loginError.textContent = error.message;
+        
+        // Re-enable form
+        submitBtn.disabled = false;
+        submitBtn.textContent = "Login";
       });
   });
 
-  // Signup form submission - USING DIRECT FIREBASE
+  // Signup form submission
   signupForm.addEventListener('submit', (e) => {
     e.preventDefault();
+    const username = document.getElementById('signup-username')?.value.trim() || '';
     const email = document.getElementById('signup-email').value;
     const password = document.getElementById('signup-password').value;
     const confirm = document.getElementById('signup-confirm').value;
@@ -134,38 +128,139 @@ document.addEventListener('DOMContentLoaded', () => {
       return;
     }
     
+    // Add username validation if username field exists
+    if (document.getElementById('signup-username')) {
+      if (username.length < 3) {
+        signupError.textContent = "Username must be at least 3 characters";
+        return;
+      }
+      
+      if (!/^[A-Za-z0-9_]+$/.test(username)) {
+        signupError.textContent = "Username can only contain letters, numbers, and underscores";
+        return;
+      }
+    }
+    
     console.log("Attempting to create account with:", email);
     
-    // Direct Firebase account creation instead of using auth.js
+    // Disable form while processing
+    const submitBtn = signupForm.querySelector('button[type="submit"]');
+    submitBtn.disabled = true;
+    submitBtn.textContent = "Creating Account...";
+    
+    // Create the account
     firebase.auth().createUserWithEmailAndPassword(email, password)
       .then((userCredential) => {
         console.log("Account created successfully:", userCredential.user.email);
-        // Redirect to login after successful signup
-        showScreen(loginScreen);
-        document.getElementById('login-email').value = email;
-        loginError.textContent = "Account created! Please login.";
+        
+        // If username field exists, save it to Firestore
+        if (username) {
+          const db = firebase.firestore();
+          return db.collection('users').doc(userCredential.user.uid).set({
+            username: username,
+            email: email,
+            createdAt: firebase.firestore.FieldValue.serverTimestamp()
+          })
+          .catch(error => {
+            console.error("Error saving to Firestore:", error);
+            throw new Error("Failed to save user to database: " + error.message);
+          })
+          .then(() => {
+            console.log("User data saved successfully to Firestore");
+            
+            // Store username temporarily
+            localStorage.setItem('tempUsername', username);
+            
+            // Success message and redirect
+            showScreen(loginScreen);
+            document.getElementById('login-email').value = email;
+            loginError.textContent = "Account created! Please login.";
+          });
+        } else {
+          // No username field, just redirect
+          showScreen(loginScreen);
+          document.getElementById('login-email').value = email;
+          loginError.textContent = "Account created! Please login.";
+        }
       })
       .catch((error) => {
-        console.error("Signup error:", error.code, error.message);
+        console.error("Signup error:", error);
         signupError.textContent = error.message;
+      })
+      .finally(() => {
+        // Re-enable form
+        submitBtn.disabled = false;
+        submitBtn.textContent = "Create Account";
       });
   });
 
   // Start the game
   function startGame(user) {
     console.log("Starting game with user:", user ? user.email : "guest");
-    if (user) {
-      localStorage.setItem('user', JSON.stringify({
-        uid: user.uid,
-        email: user.email,
-        displayName: user.displayName || user.email.split('@')[0]
-      }));
-    } else {
-      localStorage.setItem('user', JSON.stringify({ isGuest: true }));
-    }
     
-    // Redirect to the game page
-    window.location.href = 'index.html';
+    if (user) {
+      // Basic user info
+      const userData = {
+        uid: user.uid,
+        email: user.email
+      };
+      
+      // Use temporary username if available
+      const tempUsername = localStorage.getItem('tempUsername');
+      if (tempUsername) {
+        userData.username = tempUsername;
+        localStorage.removeItem('tempUsername'); // Clear after use
+        
+        // Store and redirect immediately
+        console.log("Using temporary username:", tempUsername);
+        localStorage.setItem('user', JSON.stringify(userData));
+        window.location.href = 'index.html';
+        return;
+      }
+      
+      // Try to get username from Firestore
+      console.log("Fetching user data from Firestore...");
+      firebase.firestore().collection('users').doc(user.uid).get()
+        .then(doc => {
+          if (doc.exists && doc.data().username) {
+            userData.username = doc.data().username;
+            console.log("Username loaded from Firestore:", userData.username);
+          } else {
+            // If no username in database, use email prefix
+            userData.username = user.email.split('@')[0];
+            console.log("No username in database, using email prefix:", userData.username);
+            
+            // Save this default username to Firestore for next time
+            firebase.firestore().collection('users').doc(user.uid).set({
+              username: userData.username,
+              email: user.email,
+              createdAt: firebase.firestore.FieldValue.serverTimestamp()
+            }, { merge: true }).catch(err => console.error("Error saving default username:", err));
+          }
+          
+          // Store user data and redirect
+          localStorage.setItem('user', JSON.stringify(userData));
+          window.location.href = 'index.html';
+        })
+        .catch(error => {
+          console.error("Error fetching user document:", error);
+          
+          // Fallback to email prefix
+          userData.username = user.email.split('@')[0];
+          console.log("Error getting username, using email prefix:", userData.username);
+          
+          // Store basic data and redirect
+          localStorage.setItem('user', JSON.stringify(userData));
+          window.location.href = 'index.html';
+        });
+    } else {
+      // Guest user
+      localStorage.setItem('user', JSON.stringify({ 
+        isGuest: true,
+        username: "Guest"
+      }));
+      window.location.href = 'index.html';
+    }
   }
   
   // Check if user is already logged in
@@ -177,12 +272,18 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  // Check for remembered email
+  // Load remembered email
   const rememberedEmail = localStorage.getItem('rememberedEmail');
   if (rememberedEmail) {
     document.getElementById('login-email').value = rememberedEmail;
     if (document.getElementById('remember-me')) {
       document.getElementById('remember-me').checked = true;
     }
+  }
+  
+  // Add debug info to console
+  console.log("Login component initialized");
+  if (window.debugFirebase) {
+    window.debugFirebase();
   }
 });
