@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>API Key Setup - LetterStorm</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap">
+  <style>
+    body {
+      font-family: 'Orbitron', sans-serif;
+      background-color: #0B0B28;
+      color: white;
+      padding: 30px;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+    h1, h2 {
+      color: #00ffff;
+      text-align: center;
+      margin-bottom: 30px;
+    }
+    .container {
+      background-color: rgba(0,0,0,0.3);
+      border-radius: 10px;
+      padding: 30px;
+      box-shadow: 0 0 20px rgba(0,255,255,0.2);
+      margin-bottom: 20px;
+    }
+    label {
+      display: block;
+      margin-bottom: 10px;
+      color: #00ffff;
+    }
+    input[type="text"] {
+      width: 100%;
+      padding: 12px;
+      margin-bottom: 20px;
+      background-color: #111144;
+      border: 1px solid #1a1a5a;
+      border-radius: 5px;
+      color: white;
+      font-family: monospace;
+      font-size: 16px;
+    }
+    button {
+      background-color: #00ffff;
+      color: #0B0B28;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 5px;
+      font-family: 'Orbitron', sans-serif;
+      font-weight: bold;
+      cursor: pointer;
+      font-size: 16px;
+      display: block;
+      width: 100%;
+      transition: all 0.3s;
+    }
+    button:hover {
+      background-color: #66ffff;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 10px rgba(0,255,255,0.3);
+    }
+    .success {
+      color: #4CAF50;
+      margin-top: 20px;
+      text-align: center;
+      font-weight: bold;
+      display: none;
+    }
+    .error {
+      color: #F44336;
+      margin-top: 20px;
+      text-align: center;
+      font-weight: bold;
+      display: none;
+    }
+    .info {
+      margin-top: 30px;
+      padding: 20px;
+      background-color: rgba(0,0,0,0.2);
+      border-left: 3px solid #00ffff;
+      font-size: 14px;
+    }
+    .info a {
+      color: #00ffff;
+      text-decoration: none;
+    }
+    .info a:hover {
+      text-decoration: underline;
+    }
+    .navigation {
+      margin-top: 30px;
+      text-align: center;
+    }
+    .navigation a {
+      color: #00ffff;
+      text-decoration: none;
+      margin: 0 10px;
+    }
+    .navigation a:hover {
+      text-decoration: underline;
+    }
+    .status {
+      margin-bottom: 20px;
+      padding: 15px;
+      border-radius: 5px;
+    }
+    .status.active {
+      background-color: rgba(0, 255, 0, 0.1);
+      border: 1px solid #4CAF50;
+    }
+    .status.inactive {
+      background-color: rgba(255, 0, 0, 0.1);
+      border: 1px solid #F44336;
+    }
+  </style>
+</head>
+<body>
+  <h1>LetterStorm AI Settings</h1>
+  
+  <div class="container">
+    <h2>AI Service Status</h2>
+    
+    <div class="status" id="sentenceStatus">
+      <h3>Sentence Generator</h3>
+      <p id="sentenceStatusText">Checking status...</p>
+    </div>
+    
+    <div class="status" id="codeStatus">
+      <h3>Code Snippet Generator</h3>
+      <p id="codeStatusText">Checking status...</p>
+    </div>
+  </div>
+  
+  <div class="container">
+    <h2>Mistral AI API Key</h2>
+    
+    <form id="api-form">
+      <label for="api-key">API Key:</label>
+      <input type="text" id="api-key" placeholder="Enter your Mistral AI API key here">
+      
+      <button type="submit">Save API Key</button>
+    </form>
+    
+    <div id="success-message" class="success">API key saved and activated successfully!</div>
+    <div id="error-message" class="error">Error saving API key. Please try again.</div>
+    
+    <div class="info">
+      <p><strong>How to get a Mistral AI API key:</strong></p>
+      <ol>
+        <li>Visit <a href="https://mistral.ai/" target="_blank">https://mistral.ai/</a></li>
+        <li>Create an account or sign in</li>
+        <li>Go to your Dashboard or API Keys section</li>
+        <li>Generate a new API key</li>
+        <li>Copy and paste it above</li>
+      </ol>
+      <p><strong>Note:</strong> Without an API key, the game will use pre-defined examples instead of AI-generated content.</p>
+    </div>
+  </div>
+  
+  <div class="navigation">
+    <a href="index.html">Back to Game</a>
+  </div>
+  
+  <script src="lib/ai_model/config.js"></script>
+  <script src="lib/ai_model/sentence_api.js"></script>
+  <script src="lib/ai_model/code_generator.js"></script>
+  
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const apiForm = document.getElementById('api-form');
+      const apiKeyInput = document.getElementById('api-key');
+      const successMessage = document.getElementById('success-message');
+      const errorMessage = document.getElementById('error-message');
+      const sentenceStatus = document.getElementById('sentenceStatus');
+      const sentenceStatusText = document.getElementById('sentenceStatusText');
+      const codeStatus = document.getElementById('codeStatus');
+      const codeStatusText = document.getElementById('codeStatusText');
+      
+      // Try to get saved API key
+      try {
+        const savedKey = localStorage.getItem('mistral_api_key');
+        if (savedKey) {
+          apiKeyInput.value = savedKey;
+          checkAPIStatus(savedKey);
+        } else {
+          checkAPIStatus(null);
+        }
+      } catch (e) {
+        console.error("Error getting API key:", e);
+        updateStatus('sentence', false, "Error checking API status");
+        updateStatus('code', false, "Error checking API status");
+      }
+      
+      function updateStatus(type, isActive, message) {
+        const statusElement = type === 'sentence' ? sentenceStatus : codeStatus;
+        const textElement = type === 'sentence' ? sentenceStatusText : codeStatusText;
+        
+        statusElement.className = isActive ? 'status active' : 'status inactive';
+        textElement.textContent = message;
+      }
+      
+      function checkAPIStatus(key) {
+        // Check sentence generator status
+        if (window.sentenceGenerator) {
+          if (key) {
+            window.sentenceGenerator.setApiKey(key);
+            updateStatus('sentence', true, "Active with API key");
+          } else {
+            updateStatus('sentence', false, "Missing API key");
+          }
+        } else {
+          updateStatus('sentence', false, "Generator not available");
+        }
+        
+        // Check code generator status
+        if (window.codeGenerator) {
+          if (key) {
+            window.codeGenerator.setApiKey(key);
+            updateStatus('code', true, "Active with API key");
+          } else {
+            updateStatus('code', false, "Missing API key");
+          }
+        } else {
+          updateStatus('code', false, "Generator not available");
+        }
+      }
+      
+      apiForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const apiKey = apiKeyInput.value.trim();
+        
+        // Reset messages
+        successMessage.style.display = 'none';
+        errorMessage.style.display = 'none';
+        
+        if (!apiKey) {
+          errorMessage.textContent = "Please enter an API key";
+          errorMessage.style.display = 'block';
+          return;
+        }
+
+        try {
+          // Save to localStorage
+          localStorage.setItem('mistral_api_key', apiKey);
+          
+          // Update the API key in both generators
+          checkAPIStatus(apiKey);
+          
+          // Show success message
+          successMessage.textContent = "API key saved and activated successfully!";
+          successMessage.style.display = 'block';
+          
+          // Test the API to make sure it works
+          testAPIConnection(apiKey);
+          
+          // Hide success message after 3 seconds
+          setTimeout(() => {
+            successMessage.style.display = 'none';
+          }, 3000);
+          
+        } catch (e) {
+          console.error("Error saving API key:", e);
+          errorMessage.textContent = "Error saving API key: " + e.message;
+          errorMessage.style.display = 'block';
+        }
+      });
+      
+      async function testAPIConnection(apiKey) {
+        try {
+          // Test sentence generator
+          if (window.sentenceGenerator) {
+            updateStatus('sentence', true, "Testing connection...");
+            const sentences = await window.sentenceGenerator.fetchSentences(3);
+            if (sentences && sentences.length > 0) {
+              updateStatus('sentence', true, `Connection successful: ${sentences.length} sentences received`);
+            } else {
+              updateStatus('sentence', false, "Connection failed: No sentences received");
+            }
+          }
+          
+          // Test code generator
+          if (window.codeGenerator) {
+            updateStatus('code', true, "Testing connection...");
+            const snippets = await window.codeGenerator.fetchCodeSnippets(3);
+            if (snippets && snippets.length > 0) {
+              updateStatus('code', true, `Connection successful: ${snippets.length} snippets received`);
+            } else {
+              updateStatus('code', false, "Connection failed: No code snippets received");
+            }
+          }
+        } catch (error) {
+          console.error("API test error:", error);
+          updateStatus('sentence', false, "API test error: " + error.message);
+          updateStatus('code', false, "API test error: " + error.message);
+        }
+      }
+    });
+  </script>
+</body>
+</html>

@@ -102,6 +102,10 @@
       background: #FF9800;
       color: white;
     }
+    #codeMode {
+      background: #9C27B0;  /* Purple for code mode */
+      color: white;
+    }
     /* Return to home button styling */
     .return-home-btn {
       background: #ff00ff;
@@ -219,6 +223,7 @@
     <button id="letterMode">Typing Letters</button>
     <button id="wordMode">Typing Words</button>
     <button id="sentenceMode">Typing Sentences</button>
+    <button id="codeMode">Typing Code</button>
     <!-- Add return to home button -->
     <button id="returnToHome" class="return-home-btn">Return to Home Page</button>
   </div>
@@ -242,21 +247,26 @@
     </div>
   </div>
   
-  <!-- The Firebase scripts (v8 compat approach) -->
+  <!-- Update the scripts section to load in correct order -->
+  
+  <!-- Load Firebase scripts first -->
   <script src="lib/firebase-app-compat.js"></script>
   <script src="lib/firebase-auth-compat.js"></script>
   <script src="lib/firebase-firestore-compat.js"></script>
   <script src="firebase-config.js"></script>
   
-  <!-- Optionally a scores-manager.js if you have it -->
-  <script src="scores-manager.js"></script>
+  <!-- Add AI model config and API -->
+  <script src="lib/ai_model/config.js"></script>
+  <script src="lib/ai_model/sentence_api.js"></script>
+  <script src="lib/ai_model/code_generator.js"></script>
+  <script src="sentence-initializer.js"></script>
   
-  <!-- Our modes: game.js (letters), words.js, sentences.js -->
+  <!-- Other game scripts -->
+  <script src="scores-manager.js"></script>
   <script src="game.js"></script>
   <script src="words.js"></script>
   <script src="sentences.js"></script>
-  
-  <!-- The main logic that sets up event listeners -->
+  <script src="code.js"></script>
   <script src="main.js"></script>
 </body>
 </html>

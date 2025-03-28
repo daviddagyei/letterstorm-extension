@@ -75,15 +75,27 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  // Space bar => pause/resume if letters/words
-  // main.js (only the keydown portion changed)
+  // Code mode
+  document.getElementById("codeMode").addEventListener("click", () => {
+    document.getElementById("modeOverlay").style.display = "none";
+    document.getElementById("gameCanvas").style.display = "block";
+    window.gameMode = "code";
+
+    if (typeof initCodeMode === "function") {
+      initCodeMode();
+    } else {
+      console.error("initCodeMode is not defined");
+    }
+  });
+
+  // Space bar => pause/resume if letters/words/sentences/code
   document.addEventListener("keydown", (e) => {
     // If user presses the "Control" key
     if (e.key === "Control") {
       e.preventDefault();
 
-      // We only do pause/resume if gameMode is letters, words, or sentences
-      if (window.gameMode === "letters" || window.gameMode === "words" || window.gameMode === "sentences") {
+      // We only do pause/resume if gameMode is letters, words, sentences, or code
+      if (["letters", "words", "sentences", "code"].includes(window.gameMode)) {
         if (typeof getCurrentGameState === "function") {
           const currentState = getCurrentGameState();
           if (currentState === "playing") {
@@ -101,7 +113,6 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     }
   });
-
 
   // Resume button
   document.getElementById("resumeBtn").addEventListener("click", () => {

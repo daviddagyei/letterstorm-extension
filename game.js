@@ -5,7 +5,7 @@ function initLetterMode() {
   const SCREEN_WIDTH = canvas.width;
   const SCREEN_HEIGHT = canvas.height;
 
-  let LETTER_FALL_SPEED = 5;
+  let LETTER_FALL_SPEED = 1;
   const NEW_LETTER_INTERVAL = 1000; // Spawn a new letter every second
 
   let letters = [];
