@@ -102,6 +102,10 @@
       background: #FF9800;
       color: white;
     }
+    #codeMode {
+      background: #9C27B0;  /* Purple for code mode */
+      color: white;
+    }
     /* Return to home button styling */
     .return-home-btn {
       background: #ff00ff;
@@ -219,6 +223,7 @@
     <button id="letterMode">Typing Letters</button>
     <button id="wordMode">Typing Words</button>
     <button id="sentenceMode">Typing Sentences</button>
+    <button id="codeMode">Typing Code</button>
     <!-- Add return to home button -->
     <button id="returnToHome" class="return-home-btn">Return to Home Page</button>
   </div>
@@ -253,6 +258,7 @@
   <!-- Add AI model config and API -->
   <script src="lib/ai_model/config.js"></script>
   <script src="lib/ai_model/sentence_api.js"></script>
+  <script src="lib/ai_model/code_generator.js"></script>
   <script src="sentence-initializer.js"></script>
   
   <!-- Other game scripts -->
@@ -260,6 +266,7 @@
   <script src="game.js"></script>
   <script src="words.js"></script>
   <script src="sentences.js"></script>
+  <script src="code.js"></script>
   <script src="main.js"></script>
 </body>
 </html>
