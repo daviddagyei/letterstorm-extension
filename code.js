@@ -42,7 +42,7 @@ function initCodeMode() {
     let currentSnippet = { code: "", language: "" };
     let typedIndex = 0;
   
-    const CODE_TIME = 20000; // 20 seconds for code snippet
+    const CODE_TIME = 60000; // 20 seconds for code snippet
     let typedTimeLeft = 0;
   
     let score = 0;

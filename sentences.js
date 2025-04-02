@@ -10,33 +10,63 @@ function initSentenceMode() {
   
     let gameState = "start";
   
-    // Try to get AI-generated sentences first
+    // Load sentences from file
     let sentences = [];
-    if (window.sentenceGenerator) {
-        try {
-            sentences = window.sentenceGenerator.getImmediateSentences(15);
-            console.log("AI sentences loaded:", sentences);
-        } catch (error) {
-            console.error("Error loading AI sentences:", error);
-        }
+    
+    // Function to strip punctuation from a string
+    function stripPunctuation(str) {
+        return str.replace(/[.,\/#!?$%\^&\*;:{}=\-_`~()'"]/g, "");
     }
     
-    // If no AI sentences available, use fallbacks
-    if (!sentences || !Array.isArray(sentences) || sentences.length === 0) {
-        console.log("No AI sentences available, using fallbacks");
-        sentences = [
-            "The quick brown fox jumps over the lazy dog.",
-            "All that glitters is not gold.",
-            "Actions speak louder than words.",
-            "A picture is worth a thousand words.",
-            "The early bird catches the worm.",
-            "Don't count your chickens before they hatch.",
-            "Practice makes perfect.",
-            "Time flies when you're having fun.", 
-            "Better late than never.",
-            "Two wrongs don't make a right."
-        ];
+    // Function to load sentences from file
+    function loadSentencesFromFile() {
+        return fetch('sentence_list.txt')
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Failed to load sentence_list.txt');
+                }
+                return response.text();
+            })
+            .then(text => {
+                // Split the text file by newlines, filter out empty lines, and strip punctuation
+                const loadedSentences = text.split('\n')
+                    .map(line => line.trim())
+                    .filter(line => line.length > 0)
+                    .map(line => stripPunctuation(line));
+                
+                if (loadedSentences.length === 0) {
+                    throw new Error('No sentences found in the file');
+                }
+                
+                console.log(`Loaded ${loadedSentences.length} sentences from file`);
+                return loadedSentences;
+            });
     }
+    
+    // Attempt to load sentences from file
+    loadSentencesFromFile()
+        .then(loadedSentences => {
+            sentences = loadedSentences;
+            if (gameState === "playing") {
+                spawnNewSentence();
+            }
+        })
+        .catch(error => {
+            console.error("Error loading sentences from file:", error);
+            // Fallback sentences if file loading fails - also strip punctuation
+            sentences = [
+                "The quick brown fox jumps over the lazy dog",
+                "All that glitters is not gold",
+                "Actions speak louder than words",
+                "A picture is worth a thousand words",
+                "The early bird catches the worm",
+                "Dont count your chickens before they hatch",
+                "Practice makes perfect",
+                "Time flies when youre having fun", 
+                "Better late than never",
+                "Two wrongs dont make a right"
+            ];
+        });
   
     let currentSentence = "";
     let typedIndex = 0;
@@ -47,7 +77,7 @@ function initSentenceMode() {
         if (DEBUG) console.log(`[Sentence Mode] ${msg}`);
     }
   
-    const SENTENCE_TIME = 10000; // 10 seconds allowed per sentence
+    const SENTENCE_TIME = 60000; // 10 seconds allowed per sentence
     let typedTimeLeft = 0;
   
     let score = 0;
@@ -72,23 +102,13 @@ function initSentenceMode() {
     
     // Refresh sentences periodically based on level
     function refreshSentencesList() {
-        if (!window.sentenceGenerator) return;
-        
-        let difficulty = "medium";
-        if (level <= 2) difficulty = "easy";
-        else if (level >= 5) difficulty = "hard";
-            
-        log(`Refreshing sentences with difficulty: ${difficulty}`);
-        
-        window.sentenceGenerator.fetchSentences(15, difficulty)
-            .then(newSentences => {
-                if (newSentences && newSentences.length > 0) {
-                    log(`Got ${newSentences.length} new sentences from AI`);
-                    sentences = newSentences;
-                }
+        loadSentencesFromFile()
+            .then(loadedSentences => {
+                log(`Refreshed ${loadedSentences.length} sentences from file`);
+                sentences = loadedSentences;
             })
             .catch(err => {
-                log(`Error fetching sentences: ${err.message}`);
+                log(`Error refreshing sentences from file: ${err.message}`);
             });
     }
   
@@ -96,7 +116,7 @@ function initSentenceMode() {
     // spawnNewSentence & dynamic font
     // ------------------------------------------------------------
     function spawnNewSentence() {
-        if (level > 1 && window.sentenceGenerator) {
+        if (level > 1) {
             refreshSentencesList();
         }
         
@@ -208,21 +228,17 @@ function initSentenceMode() {
       nextLevelScore = 30;
       
       // Try to refresh sentences at game start
-      if (window.sentenceGenerator) {
-          window.sentenceGenerator.fetchSentences(15, "medium")
-              .then(newSentences => {
-                  if (newSentences && newSentences.length > 0) {
-                      sentences = newSentences;
-                      log("Refreshed sentences for new game");
-                  }
-                  spawnNewSentence();
-              })
-              .catch(() => {
-                  spawnNewSentence();
-              });
-      } else {
-          spawnNewSentence();
-      }
+      loadSentencesFromFile()
+          .then(newSentences => {
+              if (newSentences && newSentences.length > 0) {
+                  sentences = newSentences;
+                  log("Refreshed sentences for new game");
+              }
+              spawnNewSentence();
+          })
+          .catch(() => {
+              spawnNewSentence();
+          });
     }
   
     // ------------------------------------------------------------
@@ -394,22 +410,16 @@ function initSentenceMode() {
       }
     };
   
-    // Force immediate refresh of AI sentences
-    if (window.sentenceGenerator) {
-        log("Requesting initial AI sentences");
-        window.sentenceGenerator.fetchSentences(15)
-            .then(newSentences => {
-                if (newSentences && newSentences.length > 0) {
-                    log(`Got ${newSentences.length} initial sentences from AI`);
-                    sentences = newSentences;
-                }
-            })
-            .catch(error => {
-                log(`Error getting initial sentences: ${error.message}`);
-            });
-    } else {
-        log("No sentence generator available");
-    }
+    // Force immediate refresh of sentences from file instead of AI
+    log("Loading initial sentences from file");
+    loadSentencesFromFile()
+        .then(loadedSentences => {
+            sentences = loadedSentences;
+            log(`Loaded ${sentences.length} initial sentences from file`);
+        })
+        .catch(error => {
+            log(`Error loading initial sentences from file: ${error.message}`);
+        });
     
     log("Sentence Mode loaded!");
 }
