@@ -77,7 +77,7 @@ function initSentenceMode() {
         if (DEBUG) console.log(`[Sentence Mode] ${msg}`);
     }
   
-    const SENTENCE_TIME = 60000; // 10 seconds allowed per sentence
+    const SENTENCE_TIME = 20000; // 10 seconds allowed per sentence
     let typedTimeLeft = 0;
   
     let score = 0;
@@ -392,9 +392,18 @@ function initSentenceMode() {
     function quitGame() {
       ctx.clearRect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
       displayMessage("Thanks for playing!", 48, "white", SCREEN_HEIGHT / 2);
-      setTimeout(() => window.close(), 1500);
+      setTimeout(() => window.close(), 1000);
     }
+    document.getElementById("mainMenuBtn").addEventListener("click", () => {
+      hideGameOverPopup();
+      goToMainMenu();
+    });
   
+    function goToMainMenu() {
+      document.getElementById("gameCanvas").style.display = "none";
+      document.getElementById("gameOverlay").style.display = "none";
+      document.getElementById("modeOverlay").style.display = "flex";
+    }
     document.getElementById("quit").addEventListener("click", () => {
       hideGameOverPopup();
       quitGame();

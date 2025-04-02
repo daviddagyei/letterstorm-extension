@@ -1,0 +1,2054 @@
+JavaScript
+function fibGreet(i8) { return i8 * 2; }
+===
+JavaScript
+const j = [1, 8, 5, 4, 1]; j.forEach(x => console.log(x));
+===
+JavaScript
+async function add(i8, j) { const res = await fetch('https://api.example.com/data'); const data = await res.json(); console.log(data); }
+===
+JavaScript
+let s = 6; let total = 3.14 * s * s;
+===
+JavaScript
+try { riskyOperation(); } catch (e) { console.error(e); }
+===
+JavaScript
+for (let i = 0; i < 1; i++) { console.log(i); }
+===
+JavaScript
+const m = [2, 5, 9, 7]; const total = m.filter(x => x % 2 === 0);
+===
+JavaScript
+let flag2 = false;
+===
+JavaScript
+const t3 = 43;
+===
+JavaScript
+for (let i = 0; i < 4; i++) { i3++; }
+===
+JavaScript
+let q7 = 2;
+===
+JavaScript
+let x1 = 40; let sum = x1 + 31;
+===
+JavaScript
+let i1 = 0; while (i1 < 9) { console.log(i1); i1++; }
+===
+JavaScript
+class Calculator { constructor(age) { this.age = age; } }
+===
+JavaScript
+function add(val1, i1) { console.log(val1 + i1); }
+===
+JavaScript
+const flag = false;
+===
+JavaScript
+function check(num) { console.log(num); }
+===
+JavaScript
+function compute(y, m) { console.log(y + m); }
+===
+JavaScript
+let y = 6; let z = 0; let result = y * z;
+===
+JavaScript
+const now = new Date();
+===
+JavaScript
+const flag3 = true;
+===
+JavaScript
+for (let i = 0; i < 1; i++) { val2++; }
+===
+JavaScript
+for (let i = 0; i <= 3; i++) { console.log(i); }
+===
+JavaScript
+const evens = arr.filter(x => x % 2 === 0);
+===
+JavaScript
+let x7 = 9;
+===
+JavaScript
+let flag = true;
+===
+JavaScript
+console.log(Math.max(25, 49));
+===
+JavaScript
+const data0 = [0, 5, 7, 7]; const data7 = data0.filter(x => x % 2 === 0);
+===
+JavaScript
+let s4 = 6; let total = 3.14 * s4 * s4;
+===
+JavaScript
+let p = 0; do { p++; } while (p < 7);
+===
+JavaScript
+for (let i = 0; i < 9; i++) { console.log(i); }
+===
+JavaScript
+async function setHello() { const res = await fetch('https://api.example.com/data'); const data = await res.json(); console.log(data); }
+===
+JavaScript
+let value = 82;
+===
+JavaScript
+for (let i = 0; i < 6; i++) { i6++; }
+===
+JavaScript
+async function speak() { const res = await fetch('https://api.example.com/data'); const data = await res.json(); console.log(data); }
+===
+JavaScript
+const i7 = false;
+===
+JavaScript
+function compute(age, z5) { console.log(age + z5); }
+===
+JavaScript
+const n0 = true;
+===
+JavaScript
+function add(num, j) { return num + j; }
+===
+JavaScript
+const arr2 = [6, 2, 7]; const newArr = arr2.map(x => x * 2);
+===
+JavaScript
+for (let i = 0; i < 8; i++) { console.log(i); }
+===
+JavaScript
+function calculate(i3, z7) { console.log(i3 + z7); }
+===
+JavaScript
+const isValid = false;
+===
+JavaScript
+let value6 = 3;
+===
+JavaScript
+class Person { constructor(name) { this.name = name; } }
+===
+JavaScript
+for (let i = 0; i < 3; i++) { console.log(i); }
+===
+JavaScript
+const result = [2, 4, 1].map(x => x * 2);
+===
+JavaScript
+let isValid = true;
+===
+JavaScript
+for (let i = 0; i < 8; i++) { x7++; }
+===
+JavaScript
+function compute(x, y) { return x + y; }
+===
+JavaScript
+for (let i = 0; i <= 5; i++) { console.log(i); }
+===
+JavaScript
+let n5 = 7;
+===
+JavaScript
+const result = [4, 9, 0].filter(x => x % 2 === 0);
+===
+JavaScript
+console.log(Math.max(49, 32));
+===
+JavaScript
+for (let i = 0; i < 1; i++) { console.log(i); }
+===
+JavaScript
+for (let i = 0; i < 8; ++i) { console.log(i); }
+===
+JavaScript
+for (let i = 0; i < 5; i++) { console.log(i); }
+===
+JavaScript
+let n8 = 23;
+===
+JavaScript
+for (let i = 0; i < 6; i++) { console.log(i); }
+===
+JavaScript
+let val4 = 17;
+===
+JavaScript
+let s1 = 42;
+===
+JavaScript
+let flag1 = true;
+===
+JavaScript
+try { riskyOperation(); } catch (e) { console.error(e); }
+===
+JavaScript
+for (let i = 0; i < 7; i++) { console.log(i); }
+===
+JavaScript
+let flag8 = false;
+===
+JavaScript
+const flag2 = false;
+===
+JavaScript
+for (let i = 0; i < 6; ++i) { console.log(i); }
+===
+JavaScript
+const array1 = [0, 6, 1]; const array6 = array1.map(x => x * 2);
+===
+JavaScript
+const a = 2.5; const b = 7.94; const result = a * b;
+===
+JavaScript
+function check(num) { return num + num; }
+===
+JavaScript
+let p0 = 28;
+===
+JavaScript
+for (let i = 0; i < 1; i++) { i5++; }
+===
+JavaScript
+function factorial(n) { if (n <= 1) return 1; return n * factorial(n - 1); }
+===
+JavaScript
+let j3 = 14; let result = 3.14 * j3 * j3;
+===
+JavaScript
+for (let i = 0; i < 7; i++) { data1++; }
+===
+JavaScript
+let y9 = 84;
+===
+JavaScript
+for (let i = 0; i < 2; i++) { val1++; }
+===
+JavaScript
+for (let i = 0; i < 9; i++) { console.log(i); }
+===
+JavaScript
+function add(j4, x) { console.log(j4 + x); }
+===
+JavaScript
+for (let i = 0; i < 5; i++) { i5++; }
+===
+JavaScript
+function add(x, y) { console.log(x + y); }
+===
+JavaScript
+const flag0 = true;
+===
+JavaScript
+for (let i = 0; i < 9; ++i) { console.log(i); }
+===
+JavaScript
+const arr6 = [7, 3, 6, 8]; const arr7 = arr6.filter(x => x % 2 === 0);
+===
+JavaScript
+function fibRec(n) { if (n < 2) return n; return fibRec(n-1) + fibRec(n-2); }
+===
+JavaScript
+let r = 2; let area = 3.14 * r * r;
+===
+JavaScript
+let i5 = 0; while (i5 < 8) { i5++; }
+===
+JavaScript
+class Car { constructor(age) { this.age = age; } }
+===
+JavaScript
+for (let i = 0; i < 7; i++) { j4++; }
+===
+JavaScript
+for (let i = 0; i < 3; ++i) { console.log(i); }
+===
+JavaScript
+const arr8 = [6, 9, 2, 9]; const newArr = arr8.map(x => x * 2);
+===
+JavaScript
+function add(val3, x) { console.log(val3 + x); }
+===
+JavaScript
+try { riskyOperation(); } catch (e) { console.error(e); }
+===
+JavaScript
+let n2 = 73;
+===
+JavaScript
+let y6 = 32; let result = 3.14 * y6 * y6;
+===
+JavaScript
+const flag7 = true;
+===
+JavaScript
+console.log(Math.max(5, 49));
+===
+JavaScript
+for (let i = 0; i < 4; i++) { i7++; }
+===
+JavaScript
+console.log(Math.max(26, 25));
+===
+JavaScript
+let j2 = 87; let t3 = 40; let sum = j2 + t3;
+===
+JavaScript
+for (let i = 0; i < 3; i++) { console.log(i); }
+===
+JavaScript
+let isActive = true;
+===
+JavaScript
+let count2 = 0; while (count2 < 3) { count2++; }
+===
+JavaScript
+function square(k) { return k * k; }
+===
+JavaScript
+class Vehicle { test() { return 42; } }
+===
+JavaScript
+for (const item of arr) { console.log(item); }
+===
+JavaScript
+let data5 = 4; let total = 3.14 * data5 * data5;
+===
+JavaScript
+for (let i = 0; i < 5; i++) { j6++; }
+===
+JavaScript
+const flag9 = true;
+===
+JavaScript
+const now = new Date();
+===
+JavaScript
+function square(n0) { return n0 * n0; }
+===
+JavaScript
+let j6 = 7; let result = 3.14 * j6 * j6;
+===
+JavaScript
+const count = [2, 7, 1]; count.forEach(x => console.log(x));
+===
+JavaScript
+let count6 = 0; while (count6 < 4) { console.log(count6); count6++; }
+===
+JavaScript
+console.log(Math.max(36, 13));
+===
+JavaScript
+for (let i = 0; i < 3; i++) { console.log(i); }
+===
+JavaScript
+function add(num, data) { return num + data; }
+===
+JavaScript
+for (let i = 0; i < 6; i++) { console.log(i); }
+===
+JavaScript
+let y8 = 57;
+===
+JavaScript
+for (const num of arr) { console.log(num); }
+===
+JavaScript
+const arr7 = [9, 5, 7]; const arr5 = arr7.filter(x => x % 2 === 0);
+===
+JavaScript
+for (let i = 0; i < 4; i++) { console.log(i); }
+===
+JavaScript
+console.log('Hello World');
+===
+Python
+point = (3, 10)
+===
+Python
+for x in [2, 4, 1]: print(x)
+===
+Python
+flag = False
+===
+Python
+x = 32
+===
+Python
+def add(val7, data): print(val7, data)
+===
+Python
+b = 49
+===
+Python
+a = 28 b = 43 c = a + b
+===
+Python
+evens = [x*2 for x in range(6)]
+===
+Python
+score = 56 if score >= 90: grade = 'A' elif score >= 80: grade = 'B' else: grade = 'C'
+===
+Python
+flag = True
+===
+Python
+names = [4, 3, 3] for x in names: print(x)
+===
+Python
+def compute(val8, x): return val8 + x
+===
+Python
+evens = list(filter(lambda x: x%2==0, range(10)))
+===
+Python
+print(36 % 7)
+===
+Python
+values = [4, 7, 1] for x in values: print(x)
+===
+Python
+def fib(n): if n < 2: return n return fib(n-1) + fib(n-2)
+===
+Python
+print(8 // 2)
+===
+Python
+b = 7.80
+===
+Python
+print(38 - 19)
+===
+Python
+import math print(math.sqrt(21))
+===
+Python
+count = [1, 1, 9] for x in count: print(x)
+===
+Python
+print(8 % 3)
+===
+Python
+a = 28 b = 46 a, b = b, a
+===
+Python
+print(11 * 2)
+===
+Python
+nums = [4, 1, 0] for x in nums: print(x)
+===
+Python
+def factorial(n): if n <= 1: return 1 return n * factorial(n-1)
+===
+Python
+result = 4 ** 3
+===
+Python
+result = 8 ** 4
+===
+Python
+names = [4, 6, 1] names.append(7)
+===
+Python
+for i in range(9): print(i)
+===
+Python
+print(4 // 2)
+===
+Python
+flag = False
+===
+Python
+names = [2, 9, 1] for x in names: print(x)
+===
+Python
+print(4 * 5)
+===
+Python
+result = 9 % 6
+===
+Python
+value = 32
+===
+Python
+if num >= 90: grade = 'A' elif num >= 80: grade = 'B' else: grade = 'C'
+===
+Python
+print(26 * 2)
+===
+Python
+nums = [1, 8, 5] for x in nums: print(x)
+===
+Python
+def compute(z, data3): return z + data3
+===
+Python
+i = 0 while i < 8: i += 1
+===
+Python
+nums = [0, 3, 6] for x in nums: print(x)
+===
+Python
+a = 30 b = 31 c = a + b
+===
+Python
+value = [2, 3, 4] for x in value: print(x)
+===
+Python
+y = 4
+===
+Python
+print(3 + 18)
+===
+Python
+i = 0 while i < 3: print(i) i += 1
+===
+Python
+if val8 >= 90: grade = 'A' elif val8 >= 80: grade = 'B' else: grade = 'C'
+===
+Python
+print(6 * 2)
+===
+Python
+b = 7
+===
+Python
+result = 2 ** 5
+===
+Python
+names = [1, 8, 5] names.append(9)
+===
+Python
+a = 6 b = 6 a, b = b, a
+===
+Python
+import math print(math.sqrt(24))
+===
+Python
+print(12 // 7)
+===
+Python
+a = 5 b = 36 c = a + b
+===
+Python
+def factorial(n): if n <= 1: return 1 return n * factorial(n-1)
+===
+Python
+vals = [4, 3, 2] for x in vals: print(x)
+===
+Python
+y = 8.80
+===
+Python
+print(14 + 4)
+===
+Python
+result = 9 % 2
+===
+Python
+x = 8 y = 49 x, y = y, x
+===
+Python
+nums = [1, 0, 0] nums.append(7)
+===
+Python
+print(8 * 8)
+===
+Python
+x = 22
+===
+Python
+def factorial(n): if n <= 1: return 1 return n * factorial(n-1)
+===
+Python
+flag = True
+===
+Python
+for i in range(7): print(i)
+===
+Python
+for x in [3, 9, 6]: print(x)
+===
+Python
+import math print(math.sqrt(85))
+===
+Python
+for i in range(3): print(i)
+===
+Python
+for i in range(2): print(i)
+===
+Python
+def factorial(n): if n <= 1: return 1 return n * factorial(n-1)
+===
+Python
+result = 8 ** 7
+===
+Python
+names = [0, 7, 1] names.append(8)
+===
+Python
+a = 36 b = 9 a, b = b, a
+===
+Python
+x = 36 y = 41 x, y = y, x
+===
+Python
+import math print(math.sqrt(17))
+===
+Python
+print(7 + 27)
+===
+Python
+vals = [3, 1, 4] for x in vals: print(x)
+===
+Python
+a = 21 b = 50 c = a + b
+===
+Python
+a = 50 b = 39 a, b = b, a
+===
+Python
+i = 0 while i < 3: i += 1
+===
+Python
+def add(x, y): return x + y
+===
+Python
+def compute(x, y): return x + y
+===
+Python
+vals = [1, 8, 7] for x in vals: print(x)
+===
+Python
+i = 0 while i < 3: i += 1
+===
+Python
+names = [4, 9, 0] for x in names: print(x)
+===
+Python
+names = [7, 2, 3] names.append(6)
+===
+Python
+x = 31
+===
+Python
+for i in range(2): print(i)
+===
+Python
+def fib(n): if n < 2: return n return fib(n-1) + fib(n-2)
+===
+Python
+nums = [7, 8, 3] for x in nums: print(x)
+===
+Python
+a = 4 b = 30 c = a + b
+===
+Python
+a = 18 b = 44 c = a + b
+===
+Python
+i = 0 while i < 3: i += 1
+===
+Python
+nums = [4, 4, 4] for x in nums: print(x)
+===
+Python
+print(23 - 3)
+===
+Python
+b = 13.72
+===
+Python
+def factorial(n): if n <= 1: return 1 return n * factorial(n-1)
+===
+Python
+names = [8, 1, 8] names.append(5)
+===
+Python
+def factorial(n): if n <= 1: return 1 return n * factorial(n-1)
+===
+Python
+def fib(n): if n < 2: return n return fib(n-1) + fib(n-2)
+===
+Python
+a = 36 b = 11 c = a + b
+===
+Python
+def factorial(n): if n <= 1: return 1 return n * factorial(n-1)
+===
+Python
+import math print(math.sqrt(39))
+===
+Python
+x = 49 y = 30 x, y = y, x
+===
+Python
+for i in range(3): print(i)
+===
+Python
+for x in [2, 5, 7]: print(x)
+===
+Python
+i = 0 while i < 3: print(i) i += 1
+===
+Python
+nums = [1, 4, 1] for x in nums: print(x)
+===
+Python
+result = 7 // 5
+===
+Python
+import math print(math.sqrt(49))
+===
+Python
+flag = False
+===
+Python
+def compute(x, y): print(x + y)
+===
+Python
+nums = [9, 9, 6] for x in nums: print(x)
+===
+Python
+print(8 - 4)
+===
+Python
+def factorial(n): if n <= 1: return 1 return n * factorial(n-1)
+===
+Python
+nums = [1, 0, 4] nums.append(9)
+===
+Python
+a = 4 b = 36 a, b = b, a
+===
+Python
+def fib(n): if n < 2: return n return fib(n-1) + fib(n-2)
+===
+Python
+result = 5 % 2
+===
+Python
+x = 10 y = 38 x, y = y, x
+===
+Python
+x = 19 y = 28 x, y = y, x
+===
+Python
+def factorial(n): if n <= 1: return 1 return n * factorial(n-1)
+===
+Python
+import math print(math.sqrt(65))
+===
+Python
+import math print(math.sqrt(64))
+===
+Python
+def fib(n): if n < 2: return n return fib(n-1) + fib(n-2)
+===
+Python
+for x in [3, 3, 2]: print(x)
+===
+Python
+print(2 * 7)
+===
+Python
+def fib(n): if n < 2: return n return fib(n-1) + fib(n-2)
+===
+Python
+a = 27 b = 39 c = a + b
+===
+Python
+print(1 * 8)
+===
+Python
+if data5 >= 90: grade = 'A' elif data5 >= 80: grade = 'B' else: grade = 'C'
+===
+Python
+result = 7 ** 3
+===
+Python
+result = 0 % 7
+===
+Python
+result = 2 ** 3
+===
+Python
+print(9 * 1)
+===
+Python
+print(34 * 2)
+===
+Python
+print(40 + 1)
+===
+Python
+a = 0 b = 8 a, b = b, a
+===
+Python
+print(7 * 7)
+===
+Python
+flag = True
+===
+Python
+for x in [9, 7, 8]: print(x)
+===
+Python
+print(17 - 0)
+===
+Python
+result = 2 ** 2
+===
+Python
+names = [6, 9, 9] for x in names: print(x)
+===
+Python
+print(14 % 4)
+===
+Python
+names = [8, 8, 0] for x in names: print(x)
+===
+Python
+x = 32 y = 43 x, y = y, x
+===
+Python
+if flag2 >= 90: grade = 'A' elif flag2 >= 80: grade = 'B' else: grade = 'C'
+===
+Python
+print(3 * 7)
+===
+Python
+print(22 * 1)
+===
+Python
+import math print(math.sqrt(4))
+===
+Python
+x = 49
+===
+Python
+print(19 + 2)
+===
+Python
+a = 0 b = 13 a, b = b, a
+===
+Python
+names = [8, 2, 9] for x in names: print(x)
+===
+Python
+result = 4 % 9
+===
+Python
+flag = True
+===
+Python
+print(25 // 9)
+===
+Python
+if a >= 90: grade = 'A' elif a >= 80: grade = 'B' else: grade = 'C'
+===
+Python
+def countdown(n): while n > 0: yield n n -= 1
+===
+Python
+import math print(math.sqrt(16))
+===
+Python
+def factorial(n): if n <= 1: return 1 return n * factorial(n-1)
+===
+Python
+flag = False
+===
+Python
+def add(x, y): return x + y
+===
+Python
+print(3 + 38)
+===
+Python
+names = [1, 7, 3] names.append(4)
+===
+Python
+if value4 >= 90: grade = 'A' elif value4 >= 80: grade = 'B' else: grade = 'C'
+===
+Python
+print(12 + 3)
+===
+Python
+a = 7 b = 3 a, b = b, a
+===
+Python
+names = [6, 1, 6] for x in names: print(x)
+===
+Python
+a = 17 b = 11 a, b = b, a
+===
+Python
+flag = False
+===
+Python
+def factorial(n): if n <= 1: return 1 return n * factorial(n-1)
+===
+Python
+def factorial(n): if n <= 1: return 1 return n * factorial(n-1)
+===
+Python
+def add(val, x): print(val + x)
+===
+Python
+names = [0, 9, 1] for x in names: print(x)
+===
+Python
+print(26 + 13)
+===
+Python
+names = [6, 1, 6] for x in names: print(x)
+===
+Python
+a = 48 b = 48 a, b = b, a
+===
+Python
+if n3 >= 90: grade = 'A' elif n3 >= 80: grade = 'B' else: grade = 'C'
+===
+Python
+print(24 + 11)
+===
+Python
+import math print(math.sqrt(9))
+===
+Python
+names = [9, 6, 8] for x in names: print(x)
+===
+Python
+y = 46
+===
+Python
+result = 6 ** 6
+===
+Python
+flag = False
+===
+Python
+a = 40 b = 38 c = a + b
+===
+Python
+print(21 - 2)
+===
+Python
+import math print(math.sqrt(72))
+===
+Python
+x = 0 y = 28 x, y = y, x
+===
+Python
+import math print(math.sqrt(89))
+===
+Python
+flag = False
+===
+Python
+print(29 - 3)
+===
+Python
+nums = [9, 0, 9] for x in nums: print(x)
+===
+Python
+def countdown(n): while n > 0: yield n n -= 1
+===
+Python
+print(42 % 7)
+===
+Python
+for x in [1, 0, 0]: print(x)
+===
+Python
+import math print(math.sqrt(4))
+===
+Python
+a = 8 b = 1 a, b = b, a
+===
+Python
+print(1 * 5)
+===
+Python
+import math print(math.sqrt(36))
+===
+Python
+for i in range(9): print(i)
+===
+Python
+print(9 * 8)
+===
+Python
+print(27 % 7)
+===
+Python
+print(27 - 2)
+===
+Python
+i = 0 while i < 5: i += 1
+===
+Python
+result = 2 ** 4
+===
+Python
+import math print(math.sqrt(25))
+===
+Python
+result = 0 ** 5
+===
+Python
+a = 6 b = 2 a, b = b, a
+===
+Python
+x = 48 y = 13 x, y = y, x
+===
+Python
+print(34 + 9)
+===
+Python
+flag = True
+===
+Python
+print(47 * 1)
+===
+Python
+def square(n): return n * n
+===
+Python
+print(0 + 9)
+===
+Python
+print(28 - 1)
+===
+Python
+print('Hello from Python')
+===
+HTML
+<p>This is a paragraph.</p>
+===
+HTML
+<strong>Bold text</strong>
+===
+HTML
+<header> <h1>My Website</h1> </header>
+===
+HTML
+<hr>
+===
+HTML
+<p>This is a paragraph.</p>
+===
+HTML
+<h1>Hello World</h1>
+===
+HTML
+<article> <h3>Article Title</h3> <p>Article text.</p> </article>
+===
+HTML
+<section> <h2>Section Title</h2> <p>Section content...</p> </section>
+===
+HTML
+<header> <h1>My Website</h1> </header>
+===
+HTML
+<section> <h2>Section Title</h2> <p>Section content...</p> </section>
+===
+HTML
+<ul> <li>Foo</li> <li>Sample</li> </ul>
+===
+HTML
+<ol> <li>Error</li> <li>Brown</li> </ol>
+===
+HTML
+<p>This is a paragraph.</p>
+===
+HTML
+<em>Italic text</em>
+===
+HTML
+<strong>Bold text</strong>
+===
+HTML
+<h1>Hello World</h1>
+===
+HTML
+<p>This is a paragraph.</p>
+===
+HTML
+<ul> <li>Universe</li> <li>Fox</li> </ul>
+===
+HTML
+<p>This is a paragraph.</p>
+===
+HTML
+<p>This is a paragraph.</p>
+===
+HTML
+<ul> <li>Yes</li> <li>Yes</li> </ul>
+===
+HTML
+<table> <tr> <th>Quick</th> <th>Fox</th> </tr> <tr> <td>World</td> <td>Lazy</td> </tr> </table>
+===
+HTML
+<h1>Hello World</h1>
+===
+HTML
+<section> <h2>Section Title</h2> <p>Section content...</p> </section>
+===
+HTML
+<ul> <li>Fox</li> <li>Universe</li> </ul>
+===
+HTML
+<h1>Hello World</h1>
+===
+HTML
+<br>
+===
+HTML
+<p>This is a paragraph.</p>
+===
+HTML
+<table> <tr> <th>Charlie</th> <th>Yes</th> </tr> <tr> <td>Dog</td> <td>Fox</td> </tr> </table>
+===
+HTML
+<strong>Bold text</strong>
+===
+HTML
+<ol> <li>Universe</li> <li>Test</li> </ol>
+===
+HTML
+<section> <h2>Section Title</h2> <p>Section content...</p> </section>
+===
+HTML
+<em>Italic text</em>
+===
+HTML
+<p>This is a paragraph.</p>
+===
+HTML
+<table> <tr> <th>Bar</th> <th>Yes</th> </tr> <tr> <td>Bob</td> <td>Charlie</td> </tr> </table>
+===
+HTML
+<p>This is a paragraph.</p>
+===
+HTML
+<strong>Bold text</strong>
+===
+HTML
+<header> <h1>My Website</h1> </header>
+===
+HTML
+<table> <tr> <th>Bar</th> <th>Sample</th> </tr> <tr> <td>Yes</td> <td>World</td> </tr> </table>
+===
+HTML
+<h1>Hello World</h1>
+===
+HTML
+<p>This is a paragraph.</p>
+===
+HTML
+<footer>Site Title</footer>
+===
+HTML
+<ol> <li>Fox</li> <li>Universe</li> </ol>
+===
+HTML
+<hr>
+===
+HTML
+<ul> <li>Yes</li> <li>Lazy</li> </ul>
+===
+HTML
+<footer>Site Title</footer>
+===
+HTML
+<p>This is a paragraph.</p>
+===
+HTML
+<ul> <li>Lazy</li> <li>Dog</li> </ul>
+===
+HTML
+<strong>Bold text</strong>
+===
+HTML
+<p>This is a paragraph.</p>
+===
+HTML
+<h1>Hello World</h1>
+===
+HTML
+<table> <tr> <th>Test</th> <th>Dog</th> </tr> <tr> <td>Dog</td> <td>Fox</td> </tr> </table>
+===
+HTML
+<p>This is a paragraph.</p>
+===
+HTML
+<h1>Hello World</h1>
+===
+HTML
+<ol> <li>Test</li> <li>Fox</li> </ol>
+===
+HTML
+<footer>Site Title</footer>
+===
+HTML
+<footer>Site Title</footer>
+===
+HTML
+<h1>Hello World</h1>
+===
+HTML
+<section> <h2>Section Title</h2> <p>Section content...</p> </section>
+===
+HTML
+<p>This is a paragraph.</p>
+===
+HTML
+<article> <h3>Article Title</h3> <p>Article text.</p> </article>
+===
+HTML
+<footer>Site Title</footer>
+===
+HTML
+<ul> <li>Brown</li> <li>Yes</li> </ul>
+===
+HTML
+<ol> <li>Dog</li> <li>Test</li> </ol>
+===
+HTML
+<ul> <li>Quick</li> <li>Brown</li> </ul>
+===
+HTML
+<footer>Site Title</footer>
+===
+HTML
+<header> <h1>My Website</h1> </header>
+===
+HTML
+<ul> <li>Brown</li> <li>No</li> </ul>
+===
+HTML
+<header> <h1>My Website</h1> </header>
+===
+HTML
+<ul> <li>Brown</li> <li>World</li> </ul>
+===
+HTML
+<footer>Site Title</footer>
+===
+HTML
+<footer>Site Title</footer>
+===
+HTML
+<ol> <li>Lazy</li> <li>Bob</li> </ol>
+===
+HTML
+<ul> <li>World</li> <li>World</li> </ul>
+===
+HTML
+<article> <h3>Article Title</h3> <p>Article text.</p> </article>
+===
+HTML
+<header> <h1>My Website</h1> </header>
+===
+HTML
+<strong>Bold text</strong>
+===
+HTML
+<ul> <li>Bar</li> <li>World</li> </ul>
+===
+HTML
+<h1>Hello World</h1>
+===
+HTML
+<section> <h2>Section Title</h2> <p>Section content...</p> </section>
+===
+HTML
+<ul> <li>Sample</li> <li>Qux</li> </ul>
+===
+HTML
+<ul> <li>Bar</li> <li>Foo</li> </ul>
+===
+HTML
+<p>This is a paragraph.</p>
+===
+HTML
+<ol> <li>Bob</li> <li>Bar</li> </ol>
+===
+HTML
+<article> <h3>Article Title</h3> <p>Article text.</p> </article>
+===
+HTML
+<ul> <li>Yes</li> <li>World</li> </ul>
+===
+HTML
+<hr>
+===
+HTML
+<strong>Bold text</strong>
+===
+HTML
+<h1>Hello World</h1>
+===
+HTML
+<ol> <li>Dog</li> <li>Brown</li> </ol>
+===
+HTML
+<br>
+===
+HTML
+<ol> <li>Universe</li> <li>Fox</li> </ol>
+===
+HTML
+<footer>Site Title</footer>
+===
+HTML
+<footer>Site Title</footer>
+===
+HTML
+<ol> <li>Error</li> <li>Dog</li> </ol>
+===
+HTML
+<ol> <li>Yes</li> <li>Universe</li> </ol>
+===
+HTML
+<table> <tr> <th>Foo</th> <th>Bob</th> </tr> <tr> <td>Test</td> <td>Bar</td> </tr> </table>
+===
+HTML
+<hr>
+===
+HTML
+<ul> <li>Test</li> <li>Bar</li> </ul>
+===
+HTML
+<header> <h1>My Website</h1> </header>
+===
+HTML
+<table> <tr> <th>Foo</th> <th>Fox</th> </tr> <tr> <td>Test</td> <td>Fox</td> </tr> </table>
+===
+HTML
+<em>Italic text</em>
+===
+HTML
+<table> <tr> <th>Brown</th> <th>Fox</th> </tr> <tr> <td>Bar</td> <td>No</td> </tr> </table>
+===
+HTML
+<section> <h2>Section Title</h2> <p>Section content...</p> </section>
+===
+HTML
+<p>This is a paragraph.</p>
+===
+HTML
+<footer>Site Title</footer>
+===
+HTML
+<p>This is a paragraph.</p>
+===
+HTML
+<ul> <li>Lazy</li> <li>Foo</li> </ul>
+===
+HTML
+<p>This is a paragraph.</p>
+===
+HTML
+<strong>Bold text</strong>
+===
+HTML
+<footer>Site Title</footer>
+===
+HTML
+<ul> <li>Test</li> <li>Qux</li> </ul>
+===
+HTML
+<p>This is a paragraph.</p>
+===
+HTML
+<article> <h3>Article Title</h3> <p>Article text.</p> </article>
+===
+HTML
+<header> <h1>My Website</h1> </header>
+===
+HTML
+<ol> <li>Dog</li> <li>Universe</li> </ol>
+===
+HTML
+<ul> <li>Qux</li> <li>Bar</li> </ul>
+===
+HTML
+<br>
+===
+HTML
+<table> <tr> <th>Foo</th> <th>Yes</th> </tr> <tr> <td>Lazy</td> <td>World</td> </tr> </table>
+===
+HTML
+<table> <tr> <th>World</th> <th>Qux</th> </tr> <tr> <td>Foo</td> <td>No</td> </tr> </table>
+===
+HTML
+<ol> <li>Bar</li> <li>Universe</li> </ol>
+===
+HTML
+<table> <tr> <th>Foo</th> <th>Yes</th> </tr> <tr> <td>Lazy</td> <td>Qux</td> </tr> </table>
+===
+HTML
+<ul> <li>Bob</li> <li>Brown</li> </ul>
+===
+HTML
+<section> <h2>Section Title</h2> <p>Section content...</p> </section>
+===
+HTML
+<em>Italic text</em>
+===
+HTML
+<p>This is a paragraph.</p>
+===
+HTML
+<p>This is a paragraph.</p>
+===
+HTML
+<ul> <li>World</li> <li>Yes</li> </ul>
+===
+HTML
+<article> <h3>Article Title</h3> <p>Article text.</p> </article>
+===
+HTML
+<em>Italic text</em>
+===
+HTML
+<hr>
+===
+HTML
+<ol> <li>Quick</li> <li>No</li> </ol>
+===
+HTML
+<p>This is a paragraph.</p>
+===
+HTML
+<table> <tr> <th>Lazy</th> <th>Foo</th> </tr> <tr> <td>Fox</td> <td>Universe</td> </tr> </table>
+===
+HTML
+<ul> <li>Test</li> <li>Brown</li> </ul>
+===
+HTML
+<p>This is a paragraph.</p>
+===
+HTML
+<header> <h1>My Website</h1> </header>
+===
+HTML
+<table> <tr> <th>Universe</th> <th>Lazy</th> </tr> <tr> <td>Dog</td> <td>World</td> </tr> </table>
+===
+HTML
+<strong>Bold text</strong>
+===
+HTML
+<ol> <li>Bar</li> <li>Lazy</li> </ol>
+===
+HTML
+<section> <h2>Section Title</h2> <p>Section content...</p> </section>
+===
+HTML
+<ul> <li>Bob</li> <li>Test</li> </ul>
+===
+HTML
+<strong>Bold text</strong>
+===
+HTML
+<header> <h1>My Website</h1> </header>
+===
+HTML
+<section> <h2>Section Title</h2> <p>Section content...</p> </section>
+===
+HTML
+<p>This is a paragraph.</p>
+===
+HTML
+<footer>Site Title</footer>
+===
+HTML
+<footer>Site Title</footer>
+===
+HTML
+<table> <tr> <th>Test</th> <th>World</th> </tr> <tr> <td>Yes</td> <td>Fox</td> </tr> </table>
+===
+HTML
+<article> <h3>Article Title</h3> <p>Article text.</p> </article>
+===
+HTML
+<ul> <li>World</li> <li>Test</li> </ul>
+===
+HTML
+<header> <h1>My Website</h1> </header>
+===
+HTML
+<em>Italic text</em>
+===
+HTML
+<header> <h1>My Website</h1> </header>
+===
+HTML
+<section> <h2>Section Title</h2> <p>Section content...</p> </section>
+===
+HTML
+<ol> <li>Bar</li> <li>Fox</li> </ol>
+===
+HTML
+<ol> <li>Dog</li> <li>Brown</li> </ol>
+===
+HTML
+<table> <tr> <th>Yes</th> <th>Dog</th> </tr> <tr> <td>Brown</td> <td>Lazy</td> </tr> </table>
+===
+HTML
+<header> <h1>My Website</h1> </header>
+===
+HTML
+<h1>Hello World</h1>
+===
+HTML
+<hr>
+===
+HTML
+<ul> <li>Dog</li> <li>Test</li> </ul>
+===
+HTML
+<ol> <li>Yes</li> <li>Bar</li> </ol>
+===
+HTML
+<table> <tr> <th>Foo</th> <th>Foo</th> </tr> <tr> <td>Dog</td> <td>Brown</td> </tr> </table>
+===
+HTML
+<h1>Hello World</h1>
+===
+HTML
+<table> <tr> <th>Foo</th> <th>Foo</th> </tr> <tr> <td>Lazy</td> <td>Bar</td> </tr> </table>
+===
+HTML
+<table> <tr> <th>Qux</th> <th>Qux</th> </tr> <tr> <td>Brown</td> <td>Foo</td> </tr> </table>
+===
+HTML
+<ol> <li>Lazy</li> <li>Dog</li> </ol>
+===
+HTML
+<article> <h3>Article Title</h3> <p>Article text.</p> </article>
+===
+HTML
+<ul> <li>Fox</li> <li>Universe</li> </ul>
+===
+HTML
+<h1>Hello World</h1>
+===
+HTML
+<footer>Site Title</footer>
+===
+HTML
+<br>
+===
+HTML
+<ul> <li>Universe</li> <li>Dog</li> </ul>
+===
+HTML
+<p>This is a paragraph.</p>
+===
+HTML
+<p>This is a paragraph.</p>
+===
+HTML
+<header> <h1>My Website</h1> </header>
+===
+HTML
+<table> <tr> <th>Foo</th> <th>World</th> </tr> <tr> <td>Fox</td> <td>Yes</td> </tr> </table>
+===
+HTML
+<h1>Hello World</h1>
+===
+HTML
+<article> <h3>Article Title</h3> <p>Article text.</p> </article>
+===
+HTML
+<article> <h3>Article Title</h3> <p>Article text.</p> </article>
+===
+HTML
+<strong>Bold text</strong>
+===
+HTML
+<p>This is a paragraph.</p>
+===
+HTML
+<table> <tr> <th>Foo</th> <th>Lazy</th> </tr> <tr> <td>Universe</td> <td>Brown</td> </tr> </table>
+===
+HTML
+<ul> <li>Foo</li> <li>Bar</li> </ul>
+===
+HTML
+<ul> <li>Sample</li> <li>Sample</li> </ul>
+===
+HTML
+<ul> <li>Brown</li> <li>Qux</li> </ul>
+===
+HTML
+<article> <h3>Article Title</h3> <p>Article text.</p> </article>
+===
+HTML
+<header> <h1>My Website</h1> </header>
+===
+HTML
+<br>
+===
+HTML
+<ul> <li>Yes</li> <li>Lazy</li> </ul>
+===
+HTML
+<ul> <li>Bob</li> <li>Brown</li> </ul>
+===
+HTML
+<ul> <li>Universe</li> <li>Sample</li> </ul>
+===
+HTML
+<br>
+===
+HTML
+<table> <tr> <th>Yes</th> <th>Test</th> </tr> <tr> <td>Foo</td> <td>Brown</td> </tr> </table>
+===
+HTML
+<ul> <li>Dog</li> <li>Bar</li> </ul>
+===
+HTML
+<h1>Hello World</h1>
+===
+HTML
+<ol> <li>No</li> <li>Dog</li> </ol>
+===
+HTML
+<h1>Hello World</h1>
+===
+HTML
+<article> <h3>Article Title</h3> <p>Article text.</p> </article>
+===
+HTML
+<strong>Bold text</strong>
+===
+HTML
+<ul> <li>Brown</li> <li>Yes</li> </ul>
+===
+HTML
+<table> <tr> <th>Test</th> <th>Yes</th> </tr> <tr> <td>World</td> <td>Bar</td> </tr> </table>
+===
+HTML
+<footer>Site Title</footer>
+===
+HTML
+<table> <tr> <th>Bob</th> <th>Test</th> </tr> <tr> <td>Error</td> <td>Test</td> </tr> </table>
+===
+HTML
+<article> <h3>Article Title</h3> <p>Article text.</p> </article>
+===
+HTML
+<section> <h2>Section Title</h2> <p>Section content...</p> </section>
+===
+HTML
+<h1>Hello World</h1>
+===
+HTML
+<h1>Hello World</h1>
+===
+HTML
+<article> <h3>Article Title</h3> <p>Article text.</p> </article>
+===
+HTML
+<ul> <li>Lazy</li> <li>No</li> </ul>
+===
+HTML
+<table> <tr> <th>Sample</th> <th>Dog</th> </tr> <tr> <td>Yes</td> <td>Bar</td> </tr> </table>
+===
+HTML
+<article> <h3>Article Title</h3> <p>Article text.</p> </article>
+===
+HTML
+<br>
+===
+HTML
+<br>
+===
+HTML
+<header> <h1>My Website</h1> </header>
+===
+HTML
+<strong>Bold text</strong>
+===
+HTML
+<ol> <li>Qux</li> <li>Error</li> </ol>
+===
+HTML
+<ol> <li>Foo</li> <li>Brown</li> </ol>
+===
+HTML
+<footer>Site Title</footer>
+===
+HTML
+<header> <h1>My Website</h1> </header>
+===
+HTML
+<ul> <li>Yes</li> <li>Universe</li> </ul>
+===
+HTML
+<ol> <li>Bar</li> <li>No</li> </ol>
+===
+HTML
+<section> <h2>Section Title</h2> <p>Section content...</p> </section>
+===
+HTML
+<hr>
+===
+HTML
+<ol> <li>Foo</li> <li>Yes</li> </ol>
+===
+HTML
+<article> <h3>Article Title</h3> <p>Article text.</p> </article>
+===
+HTML
+<hr>
+===
+HTML
+<table> <tr> <th>Bar</th> <th>Dog</th> </tr> <tr> <td>Fox</td> <td>No</td> </tr> </table>
+===
+HTML
+<p>This is a paragraph.</p>
+===
+HTML
+<p>This is a paragraph.</p>
+===
+HTML
+<h1>Hello World</h1>
+===
+HTML
+<table> <tr> <th>Bar</th> <th>World</th> </tr> <tr> <td>Universe</td> <td>Bar</td> </tr> </table>
+===
+HTML
+<ul> <li>No</li> <li>Yes</li> </ul>
+===
+HTML
+<footer>Site Title</footer>
+===
+HTML
+<table> <tr> <th>Dog</th> <th>World</th> </tr> <tr> <td>Lazy</td> <td>Foo</td> </tr> </table>
+===
+HTML
+<hr>
+===
+HTML
+<ol> <li>Foo</li> <li>Foo</li> </ol>
+===
+HTML
+<strong>Bold text</strong>
+===
+HTML
+<hr>
+===
+HTML
+<section> <h2>Section Title</h2> <p>Section content...</p> </section>
+===
+HTML
+<section> <h2>Section Title</h2> <p>Section content...</p> </section>
+===
+HTML
+<strong>Bold text</strong>
+===
+HTML
+<table> <tr> <th>Fox</th> <th>No</th> </tr> <tr> <td>Brown</td> <td>Universe</td> </tr> </table>
+===
+HTML
+<table> <tr> <th>Bar</th> <th>Yes</th> </tr> <tr> <td>No</td> <td>Fox</td> </tr> </table>
+===
+HTML
+<footer>Site Title</footer>
+===
+HTML
+<footer>Site Title</footer>
+===
+HTML
+<article> <h3>Article Title</h3> <p>Article text.</p> </article>
+===
+HTML
+<ul> <li>Bar</li> <li>Foo</li> </ul>
+===
+HTML
+<footer>Site Title</footer>
+===
+HTML
+<strong>Bold text</strong>
+===
+HTML
+<p>This is a paragraph.</p>
+===
+HTML
+<h1>Hello World</h1>
+===
+HTML
+<em>Italic text</em>
+===
+HTML
+<header> <h1>My Website</h1> </header>
+===
+HTML
+<section> <h2>Section Title</h2> <p>Section content...</p> </section>
+===
+HTML
+<em>Italic text</em>
+===
+HTML
+<h1>Hello World</h1>
+===
+HTML
+<footer>Site Title</footer>
+===
+HTML
+<hr>
+===
+HTML
+<footer>Site Title</footer>
+===
+HTML
+<p>This is a paragraph.</p>
+===
+HTML
+<footer>Site Title</footer>
+===
+HTML
+<header> <h1>My Website</h1> </header>
+===
+HTML
+<em>Italic text</em>
+===
+HTML
+<table> <tr> <th>Foo</th> <th>Foo</th> </tr> <tr> <td>Test</td> <td>World</td> </tr> </table>
+===
+HTML
+<section> <h2>Section Title</h2> <p>Section content...</p> </section>
+===
+HTML
+<table> <tr> <th>Brown</th> <th>Universe</th> </tr> <tr> <td>Yes</td> <td>Universe</td> </tr> </table>
+===
+HTML
+<table> <tr> <th>Bar</th> <th>Bar</th> </tr> <tr> <td>Test</td> <td>Yes</td> </tr> </table>
+===
+HTML
+<footer>Site Title</footer>
+===
+HTML
+<ol> <li>Lazy</li> <li>Foo</li> </ol>
+===
+HTML
+<table> <tr> <th>Fox</th> <th>Bob</th> </tr> <tr> <td>Bob</td> <td>World</td> </tr> </table>
+===
+HTML
+<table> <tr> <th>Bar</th> <th>Universe</th> </tr> <tr> <td>Brown</td> <td>Brown</td> </tr> </table>
+===
+HTML
+<ul> <li>World</li> <li>Sample</li> </ul>
+===
+HTML
+<table> <tr> <th>Bob</th> <th>Dog</th> </tr> <tr> <td>Bar</td> <td>Brown</td> </tr> </table>
+===
+HTML
+<table> <tr> <th>No</th> <th>Quick</th> </tr> <tr> <td>World</td> <td>Bar</td> </tr> </table>
+===
+HTML
+<footer>Site Title</footer>
+===
+HTML
+<ol> <li>Brown</li> <li>Brown</li> </ol>
+===
+HTML
+<table> <tr> <th>Yes</th> <th>Lazy</th> </tr> <tr> <td>Error</td> <td>Yes</td> </tr> </table>
+===
+HTML
+<ol> <li>Test</li> <li>Brown</li> </ol>
+===
+HTML
+<ul> <li>Qux</li> <li>Yes</li> </ul>
+===
+HTML
+<ul> <li>Dog</li> <li>Bar</li> </ul>
+===
+HTML
+<table> <tr> <th>Fox</th> <th>Foo</th> </tr> <tr> <td>World</td> <td>World</td> </tr> </table>
+===
+HTML
+<hr>
+===
+HTML
+<section> <h2>Section Title</h2> <p>Section content...</p> </section>
+===
+HTML
+<ol> <li>Brown</li> <li>World</li> </ol>
+===
+HTML
+<p>This is a paragraph.</p>
+===
+HTML
+<article> <h3>Article Title</h3> <p>Article text.</p> </article>
+===
+HTML
+<header> <h1>My Website</h1> </header>
+===
+HTML
+<ul> <li>Quick</li> <li>Test</li> </ul>
+===
+HTML
+<header> <h1>My Website</h1> </header>
+===
+HTML
+<p>This is a paragraph.</p>
+===
+HTML
+<table> <tr> <th>Test</th> <th>Fox</th> </tr> <tr> <td>Dog</td> <td>Foo</td> </tr> </table>
+===
+HTML
+<em>Italic text</em>
+===
+HTML
+<strong>Bold text</strong>
+===
+HTML
+<article> <h3>Article Title</h3> <p>Article text.</p> </article>
+===
+HTML
+<hr>
+===
+HTML
+<table> <tr> <th>Fox</th> <th>Bob</th> </tr> <tr> <td>Test</td> <td>Dog</td> </tr> </table>
+===
+HTML
+<ul> <li>Error</li> <li>World</li> </ul>
+===
+HTML
+<ul> <li>No</li> <li>Yes</li> </ul>
+===
+HTML
+<p>This is a paragraph.</p>
+===
+HTML
+<ol> <li>Quick</li> <li>World</li> </ol>
+===
+HTML
+<header> <h1>My Website</h1> </header>
+===
+HTML
+<section> <h2>Section Title</h2> <p>Section content...</p> </section>
+===
+HTML
+<ul> <li>Test</li> <li>Bob</li> </ul>
+===
+HTML
+<hr>
+===
+HTML
+<ul> <li>Foo</li> <li>Fox</li> </ul>
+===
+HTML
+<ol> <li>Sample</li> <li>Bar</li> </ol>
+===
+HTML
+<section> <h2>Section Title</h2> <p>Section content...</p> </section>
+===
+HTML
+<ol> <li>Foo</li> <li>Test</li> </ol>
+===
+HTML
+<p>This is a paragraph.</p>
+===
+HTML
+<article> <h3>Article Title</h3> <p>Article text.</p> </article>
+===
+HTML
+<ol> <li>Yes</li> <li>No</li> </ol>
+===
+HTML
+<footer>Site Title</footer>
+===
+HTML
+<table> <tr> <th>Foo</th> <th>No</th> </tr> <tr> <td>Universe</td> <td>Universe</td> </tr> </table>
+===
+HTML
+<footer>Site Title</footer>
+===
+HTML
+<table> <tr> <th>World</th> <th>Foo</th> </tr> <tr> <td>No</td> <td>Fox</td> </tr> </table>
+===
+HTML
+<ul> <li>Yes</li> <li>Dog</li> </ul>
+===
+HTML
+<article> <h3>Article Title</h3> <p>Article text.</p> </article>
+===
+HTML
+<ol> <li>Yes</li> <li>Dog</li> </ol>
+===
+HTML
+<table> <tr> <th>No</th> <th>Test</th> </tr> <tr> <td>Universe</td> <td>Foo</td> </tr> </table>
+===
+HTML
+<table> <tr> <th>Lazy</th> <th>Fox</th> </tr> <tr> <td>Positive</td> <td>No</td> </tr> </table>
+===
+HTML
+<table> <tr> <th>Bar</th> <th>Foo</th> </tr> <tr> <td>Yes</td> <td>Brown</td> </tr> </table>
+===
+HTML
+<table> <tr> <th>Foo</th> <th>World</th> </tr> <tr> <td>Sample</td> <td>Lazy</td> </tr> </table>
+===
+HTML
+<h1>Hello World</h1>
+===
+HTML
+<p>This is a paragraph.</p>
+===
+HTML
+<em>Italic text</em>
+===
+HTML
+<article> <h3>Article Title</h3> <p>Article text.</p> </article>
+===
+HTML
+<p>This is a paragraph.</p>
+===
+HTML
+<ul> <li>Foo</li> <li>Dog</li> </ul>
+===
+HTML
+<ol> <li>Test</li> <li>Fox</li> </ol>
+===
+HTML
+<footer>Site Title</footer>
+===
+HTML
+<footer>Site Title</footer>
+===
+HTML
+<strong>Bold text</strong>
+===
+HTML
+<ul> <li>Foo</li> <li>Lazy</li> </ul>
+===
+HTML
+<header> <h1>My Website</h1> </header>
+===
+HTML
+<table> <tr> <th>Brown</th> <th>Quick</th> </tr> <tr> <td>Dog</td> <td>Qux</td> </tr> </table>
+===
+HTML
+<footer>Site Title</footer>
+===
+HTML
+<div>Simple HTML element</div>
+===
+CSS
+body { color: blue; }
+===
+Java
+System.out.println('Java example');

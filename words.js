@@ -351,7 +351,11 @@ function initWordMode() {
     document.getElementById("gameOverlay").style.display = "none";
     document.getElementById("modeOverlay").style.display = "flex";
   }
-  
+
+  document.getElementById("quit").addEventListener("click", () => {
+    hideGameOverPopup();
+    quitGame();
+  });
 
   document.getElementById("closeBtn").addEventListener("click", () => {
     quitGame();

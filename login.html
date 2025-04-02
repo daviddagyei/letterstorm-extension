@@ -2,8 +2,10 @@
 <html>
 <head>
   <meta charset="UTF-8">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; connect-src 'self' https://*.googleapis.com https://identitytoolkit.googleapis.com https://*.firebase.googleapis.com https://*.firebaseio.com https://firestore.googleapis.com wss://*.firebaseio.com; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline';">
   <title>LetterStorm - Login</title>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap">
+  <!-- Replace Google Fonts with local font -->
+  <link rel="stylesheet" href="fonts/orbitron.css">
   <link rel="stylesheet" href="login.css">
 </head>
 <body>

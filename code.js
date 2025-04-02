@@ -1,3 +1,4 @@
+// code.js
 function initCodeMode() {
     console.log("initCodeMode called");
   
@@ -9,49 +10,25 @@ function initCodeMode() {
   
     let gameState = "start";
   
-    // Try to get code snippets from generator
+    // Store code snippets (array of { code, language })
     let codeSnippets = [];
-    if (window.codeGenerator) {
-        try {
-            codeSnippets = window.codeGenerator.getImmediateSnippets(10);
-            console.log("Retrieved code snippets:", codeSnippets);
-        } catch (error) {
-            console.error("Error loading code snippets:", error);
-        }
-    }
-    
-    // Default to fallbacks if needed
-    if (!codeSnippets || !Array.isArray(codeSnippets) || codeSnippets.length === 0) {
-        console.log("No code snippets available, using fallbacks");
-        codeSnippets = [
-            { 
-                code: "function sayHello() {\n  console.log('Hello world');\n}", 
-                language: "javascript" 
-            },
-            { 
-                code: "def calculate_sum(a, b):\n  return a + b", 
-                language: "python" 
-            },
-            { 
-                code: "<div class=\"container\">\n  <p>Content goes here</p>\n</div>", 
-                language: "html" 
-            }
-        ];
-    }
-  
-    let currentSnippet = { code: "", language: "" };
+
+    // We'll store the current snippet text in one string for typing.
+    // Example snippet: "function sayHello() {\n  console.log('Hello world');\n}"
+    let currentSnippet = "";
+    let currentLanguage = ""; // Add this to track the current language
     let typedIndex = 0;
-  
-    const CODE_TIME = 60000; // 20 seconds for code snippet
+
+    // Keep track of time allowed, scoring, missed attempts, etc.
+    const CODE_TIME = 45000; // 45 seconds or whatever you prefer
     let typedTimeLeft = 0;
   
     let score = 0;
     let missed = 0;
     let level = 1;
-    let nextLevelScore = 25;
-    let lastSnippetRefresh = 0;
+    let nextLevelScore = 30;
   
-    // High score from localStorage
+    // High score from localStorage for code mode
     let highScore = parseInt(localStorage.getItem("codeModeHighScore")) || 0;
   
     // Assets
@@ -60,333 +37,410 @@ function initCodeMode() {
     const scoreSound = new Audio("score.mp3");
     const wrongSound = new Audio("wrong.mp3");
   
-    // Visual settings
+    // Glow color
     const GLOW_COLOR = "#00ffff";
-    const FONT_SIZE = 20;
-    const LINE_HEIGHT = 30;
-    const CODE_COLORS = {
-        javascript: "#f7df1e",
-        python: "#3572A5",
-        html: "#e34c26",
-        css: "#563d7c",
-        default: "#ffffff"
-    };
   
-    // Prepare code for display - flattening multiline code
-    function prepareCodeForDisplay(code) {
-        return code.replace(/\n/g, " ").replace(/\s+/g, " ");
+    // Debug logging
+    const DEBUG = true;
+    function log(msg) {
+        if (DEBUG) console.log(`[Code Mode] ${msg}`);
     }
-  
-    // Refresh code snippets based on level
-    function refreshCodeSnippetsList() {
-        if (!window.codeGenerator) return;
-        
-        const now = Date.now();
-        if (now - lastSnippetRefresh > 30000) { // 30 seconds
-            lastSnippetRefresh = now;
-            
-            let difficulty = "medium";
-            if (level <= 2) difficulty = "easy";
-            else if (level >= 5) difficulty = "hard";
-                
-            console.log(`Refreshing code snippets with difficulty: ${difficulty}`);
-            
-            window.codeGenerator.setDifficulty(difficulty)
-                .fetchCodeSnippets(10)
-                .then(newSnippets => {
-                    if (newSnippets && newSnippets.length > 0) {
-                        console.log(`Got ${newSnippets.length} new code snippets`);
-                        codeSnippets = newSnippets;
-                    }
-                })
-                .catch(err => {
-                    console.error(`Error fetching code snippets: ${err.message}`);
+
+    // Function to load code snippets from file: code_list.txt
+    // The file has a pattern like:
+    //   JavaScript
+    //   function fibGreet(i8) { return i8 * 2; }
+    //   ===
+    //   JavaScript
+    //   const j = [1,8,5]; ...
+    //   ...
+    // We can parse each block separated by "===".
+    function loadCodeSnippetsFromFile() {
+        return fetch('code_list.txt')
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Failed to load code_list.txt');
+                }
+                return response.text();
+            })
+            .then(text => {
+                // The file has blocks separated by '==='
+                // Each block might look like:
+                //   JavaScript
+                //   function fib() {...}
+                // We parse them into { code, language } objects.
+                const rawBlocks = text.split('===');
+
+                let loadedSnippets = [];
+                rawBlocks.forEach(block => {
+                    // Trim lines
+                    let lines = block.trim().split('\n').map(l => l.trim()).filter(l => l.length > 0);
+                    if (lines.length < 2) return; // Must have at least language + code
+
+                    // The first line is the language, the rest is the code
+                    const lang = lines[0];
+                    const codeLines = lines.slice(1).join('\n'); // rejoin with \n to preserve multi-line
+                    loadedSnippets.push({ code: codeLines, language: lang });
                 });
-        }
+
+                if (loadedSnippets.length === 0) {
+                    throw new Error('No code snippets found in code_list.txt');
+                }
+                
+                log(`Loaded ${loadedSnippets.length} code snippets from file`);
+                return loadedSnippets;
+            });
     }
-  
+
+    // Attempt to load code snippets from file
+    loadCodeSnippetsFromFile()
+        .then(snippets => {
+            codeSnippets = snippets;
+            // If the game is already playing, we can spawn
+            if (gameState === "playing") {
+                spawnNewSnippet();
+            }
+        })
+        .catch(error => {
+            console.error("Error loading code snippets:", error);
+            // Fallback code snippets
+            codeSnippets = [
+                { code: "console.log(\"Hello fallback\");", language: "JavaScript" },
+                { code: "print(\"Hello fallback\")", language: "Python" },
+                { code: "<p>Fallback snippet</p>", language: "HTML" }
+            ];
+        });
+
+    // The snippet is multi-line, typedIndex will go char by char
+
+    // spawnNewSnippet picks a random code snippet from codeSnippets
     function spawnNewSnippet() {
-        refreshCodeSnippetsList();
-        
-        if (codeSnippets && codeSnippets.length > 0) {
-            currentSnippet = codeSnippets[Math.floor(Math.random() * codeSnippets.length)];
-            console.log(`New snippet in ${currentSnippet.language}:\n${currentSnippet.code}`);
-            
-            // Flatten the code for single-line display
-            currentSnippet.flatCode = prepareCodeForDisplay(currentSnippet.code);
-        } else {
-            currentSnippet = { 
-                code: "console.log('Hello world');", 
-                language: "javascript",
-                flatCode: "console.log('Hello world');"
-            };
-            console.log("No snippets available, using default");
+        if (level > 1) {
+            refreshCodeSnippetsList();
         }
-        
+
+        if (codeSnippets && codeSnippets.length > 0) {
+            const snippetObj = codeSnippets[Math.floor(Math.random() * codeSnippets.length)];
+            currentSnippet = snippetObj.code;
+            currentLanguage = snippetObj.language; // Store the language
+            log(`New code snippet [${snippetObj.language}]:\n${currentSnippet}`);
+        } else {
+            currentSnippet = "console.log('Default snippet');";
+            currentLanguage = "JavaScript"; // Default language
+        }
+
         typedIndex = 0;
         typedTimeLeft = CODE_TIME;
-        codeFontSize = pickFittingFontSize(currentSnippet.flatCode);
     }
-  
-    // picks a font size so the code snippet fits within ~80% of the canvas width
-    function pickFittingFontSize(text) {
-        let fontSize = 32; // Start with a reasonable size for code
-        const maxWidth = SCREEN_WIDTH * 0.8;
-        
-        ctx.font = `${fontSize}px 'Courier New', monospace`;
-        let width = ctx.measureText(text).width;
-        
-        while (fontSize >= 14 && width > maxWidth) {
-            fontSize--;
-            ctx.font = `${fontSize}px 'Courier New', monospace`;
-            width = ctx.measureText(text).width;
-        }
-        
-        return fontSize;
+
+    // refresh code snippets from file occasionally
+    function refreshCodeSnippetsList() {
+        loadCodeSnippetsFromFile()
+            .then(newList => {
+                log(`Refreshed code snippet list from file: ${newList.length} items`);
+                codeSnippets = newList;
+            })
+            .catch(err => {
+                log(`Error refreshing code snippet list: ${err.message}`);
+            });
     }
-  
-    function drawHUD() {
-        ctx.save();
-        const hudGradient = ctx.createLinearGradient(5, 5, 5, 160);
-        hudGradient.addColorStop(0, "#111");
-        hudGradient.addColorStop(1, "#333");
-        ctx.globalAlpha = 0.8;
-        ctx.fillStyle = hudGradient;
-        ctx.fillRect(5, 5, 220, 160);
-        ctx.strokeStyle = "#00ffff";
-        ctx.lineWidth = 2;
-        ctx.strokeRect(5, 5, 220, 160);
-        ctx.restore();
-  
-        ctx.font = "24px 'Orbitron', sans-serif";
-        ctx.textAlign = "left";
-        ctx.shadowColor = "blue";
-        ctx.shadowBlur = 10;
-  
-        // HUD elements
-        ctx.fillStyle = "#00ffff";
-        ctx.fillText(`High Score: ${highScore}`, 15, 35);
-  
-        ctx.fillStyle = "white";
-        ctx.fillText(`Score: ${score}`, 15, 65);
-  
-        ctx.fillStyle = "red";
-        ctx.fillText(`Missed: ${missed}`, 15, 95);
-  
-        ctx.fillStyle = "yellow";
-        ctx.fillText(`Level: ${level}`, 15, 125);
-        
-        // Language
-        ctx.fillStyle = CODE_COLORS[currentSnippet.language] || CODE_COLORS.default;
-        ctx.fillText(`Lang: ${currentSnippet.language}`, 15, 155);
-  
-        ctx.shadowBlur = 0;
-  
-        // Show time left
-        const secondsLeft = Math.ceil(typedTimeLeft / 1000);
-        ctx.fillText(`Time: ${secondsLeft}s`, SCREEN_WIDTH - 120, 35);
-    }
-  
-    function displayMessage(text, fontSize, color, y) {
-        ctx.font = `${fontSize}px 'Orbitron', sans-serif`;
-        ctx.textAlign = "center";
-        ctx.shadowColor = "rgba(0,0,0,0.7)";
-        ctx.shadowBlur = 10;
-        ctx.fillStyle = color;
-        ctx.fillText(text, SCREEN_WIDTH / 2, y);
-        ctx.shadowBlur = 0;
-    }
-  
-    function startScreen() {
-        ctx.clearRect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
-        ctx.drawImage(backgroundImage, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
-        displayMessage("Code Typing Challenge", 64, "white", SCREEN_HEIGHT / 2 - 80);
-        displayMessage("Type the code snippets before time runs out!", 28, "white", SCREEN_HEIGHT / 2);
-        displayMessage("Press any key to start", 24, "yellow", SCREEN_HEIGHT / 2 + 40);
-    }
-  
-    function showGameOverPopup() {
-        document.getElementById("popupScore").textContent = `Final Score: ${score}`;
-        document.getElementById("gameOverlay").style.display = "flex";
-    }
-  
-    function hideGameOverPopup() {
-        document.getElementById("gameOverlay").style.display = "none";
-    }
-  
+
     function resetGame() {
         score = 0;
         missed = 0;
         level = 1;
-        nextLevelScore = 25;
-        lastSnippetRefresh = 0;
-        refreshCodeSnippetsList();
-        spawnNewSnippet();
+        nextLevelScore = 30;
+
+        loadCodeSnippetsFromFile()
+            .then(snippets => {
+                if (snippets && snippets.length > 0) {
+                    codeSnippets = snippets;
+                    log("Refreshed code list for new game");
+                }
+                spawnNewSnippet();
+            })
+            .catch(() => {
+                spawnNewSnippet();
+            });
+    }
+
+    // drawing code
+    function drawHUD() {
+      ctx.save();
+      const hudGradient = ctx.createLinearGradient(5, 5, 5, 160); // Adjusted height for extra line
+      hudGradient.addColorStop(0, "#111");
+      hudGradient.addColorStop(1, "#333");
+      ctx.globalAlpha = 0.8;
+      ctx.fillStyle = hudGradient;
+      ctx.fillRect(5, 5, 220, 160); // Adjusted height for extra line
+      ctx.strokeStyle = "#00ffff";
+      ctx.lineWidth = 2;
+      ctx.strokeRect(5, 5, 220, 160); // Adjusted height for extra line
+      ctx.restore();
+  
+      ctx.font = "24px 'Orbitron', sans-serif";
+      ctx.textAlign = "left";
+      ctx.shadowColor = "blue";
+      ctx.shadowBlur = 10;
+  
+      // High Score
+      ctx.fillStyle = "#00ffff";
+      ctx.fillText(`High Score: ${highScore}`, 15, 35);
+  
+      // Score
+      ctx.fillStyle = "white";
+      ctx.fillText(`Score: ${score}`, 15, 65);
+  
+      // Missed
+      ctx.fillStyle = "red";
+      ctx.fillText(`Missed: ${missed}`, 15, 95);
+  
+      // Level
+      ctx.fillStyle = "yellow";
+      ctx.fillText(`Level: ${level}`, 15, 125);
+      
+      // Language - add this section to display the language
+      ctx.fillStyle = "#00ffcc"; // Distinct color for language
+      ctx.fillText(`Lang: ${currentLanguage}`, 15, 155);
+  
+      ctx.shadowBlur = 0;
+  
+      // Show time left
+      const secondsLeft = Math.ceil(typedTimeLeft / 1000);
+      ctx.fillText(`Time: ${secondsLeft}s`, SCREEN_WIDTH - 120, 35);
+    }
+
+    function displayMessage(text, fontSize, color, y) {
+      ctx.font = `${fontSize}px 'Orbitron', sans-serif`;
+      ctx.textAlign = "center";
+      ctx.shadowColor = "rgba(0,0,0,0.7)";
+      ctx.shadowBlur = 10;
+      ctx.fillStyle = color;
+      ctx.fillText(text, SCREEN_WIDTH / 2, y);
+      ctx.shadowBlur = 0;
+    }
+
+    function startScreen() {
+      ctx.clearRect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+      ctx.drawImage(backgroundImage, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+      displayMessage("Typing Code", 74, "white", SCREEN_HEIGHT / 2 - 50);
+      displayMessage("Type it before time runs out!", 36, "white", SCREEN_HEIGHT / 2 + 50);
+    }
+
+    function showGameOverPopup() {
+      document.getElementById("popupScore").textContent = `Final Score: ${score}`;
+      document.getElementById("gameOverlay").style.display = "flex";
     }
   
+    function hideGameOverPopup() {
+      document.getElementById("gameOverlay").style.display = "none";
+    }
+
     function update() {
-        typedTimeLeft -= 16.7;
-        if (typedTimeLeft <= 0) {
-            missed++;
-            if (missed >= 3) {
-                gameState = "gameover";
-                showGameOverPopup();
-                return;
-            }
-            spawnNewSnippet();
+      typedTimeLeft -= 16.7;
+      if (typedTimeLeft <= 0) {
+        missed++;
+        if (missed >= 3) {
+          gameState = "gameover";
+          showGameOverPopup();
+          return;
         }
+        spawnNewSnippet();
+      }
   
-        if (score >= nextLevelScore) {
-            level++;
-            console.log(`Level up to ${level}`);
-            nextLevelScore += 25;
-            refreshCodeSnippetsList();
-        }
+      if (score >= nextLevelScore) {
+        level++;
+        log(`Level up: ${level}`);
+        nextLevelScore += 30;
+        refreshCodeSnippetsList();
+      }
     }
-  
+
     function draw() {
-        ctx.clearRect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
-        ctx.drawImage(backgroundImage, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+      ctx.clearRect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+      ctx.drawImage(backgroundImage, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
   
-        drawHUD();
-        
-        // Draw code background with language color
-        ctx.save();
-        ctx.fillStyle = "rgba(0,0,0,0.7)";
-        ctx.fillRect(50, SCREEN_HEIGHT / 2 - 50, SCREEN_WIDTH - 100, 100);
-        ctx.strokeStyle = CODE_COLORS[currentSnippet.language] || CODE_COLORS.default;
-        ctx.lineWidth = 2;
-        ctx.strokeRect(50, SCREEN_HEIGHT / 2 - 50, SCREEN_WIDTH - 100, 100);
-        ctx.restore();
-        
-        // Draw code
-        ctx.font = `${codeFontSize}px 'Courier New', monospace`;
-        ctx.textAlign = "left";
-        
-        // Measure text for centering
-        const totalWidth = ctx.measureText(currentSnippet.flatCode).width;
-        const centerX = Math.max(60, (SCREEN_WIDTH - totalWidth) / 2);
-        const centerY = SCREEN_HEIGHT / 2;
-        
-        // Draw untypes code in gray
-        ctx.fillStyle = "rgba(255,255,255,0.3)";
-        ctx.fillText(currentSnippet.flatCode, centerX, centerY);
-        
-        // Draw typed code with language color glow
-        if (typedIndex > 0) {
-            const typedPart = currentSnippet.flatCode.substring(0, typedIndex);
-            ctx.shadowColor = CODE_COLORS[currentSnippet.language] || GLOW_COLOR;
-            ctx.shadowBlur = 15;
-            ctx.fillStyle = "#ffffff";
-            ctx.fillText(typedPart, centerX, centerY);
+      drawHUD();
+
+      // Create a code background box for better visibility
+      ctx.save();
+      ctx.fillStyle = "rgba(0, 0, 0, 0.7)";
+      ctx.fillRect(SCREEN_WIDTH * 0.1, SCREEN_HEIGHT * 0.35, SCREEN_WIDTH * 0.8, SCREEN_HEIGHT * 0.4);
+      ctx.strokeStyle = "#00ffcc";
+      ctx.lineWidth = 2;
+      ctx.strokeRect(SCREEN_WIDTH * 0.1, SCREEN_HEIGHT * 0.35, SCREEN_WIDTH * 0.8, SCREEN_HEIGHT * 0.4);
+      ctx.restore();
+
+      // We'll display the code snippet centered
+      const lines = currentSnippet.split('\n');
+
+      // Increase font size and use monospace font for code
+      const codeFontSize = 26; // Increased from 20px
+      const lineHeight = codeFontSize * 1.4; // Increased line spacing
+
+      // Calculate vertical position to center the code block
+      const totalHeight = lines.length * lineHeight;
+      const startY = SCREEN_HEIGHT / 2 - totalHeight / 2;
+
+      // Use monospace font for code and make it larger
+      ctx.font = `${codeFontSize}px 'Courier New', monospace`; 
+      ctx.textAlign = "left";
+
+      // Draw entire snippet in faint color
+      ctx.fillStyle = "rgba(255,255,255,0.3)";
+      ctx.shadowBlur = 0;
+
+      // Calculate the width of the longest line for centering
+      let maxWidth = 0;
+      lines.forEach(line => {
+        const width = ctx.measureText(line).width;
+        if (width > maxWidth) maxWidth = width;
+      });
+
+      // Center position
+      const startX = (SCREEN_WIDTH - maxWidth) / 2;
+
+      // Draw all lines
+      for (let i = 0; i < lines.length; i++) {
+        ctx.fillText(lines[i], startX, startY + i * lineHeight);
+      }
+
+      // Now highlight the typed portion in bright color
+      ctx.shadowColor = GLOW_COLOR;
+      ctx.shadowBlur = 20;
+      ctx.fillStyle = "#fff";
+
+      let globalCharIndex = 0;
+      for (let i = 0; i < lines.length; i++) {
+        const line = lines[i];
+        // typedIndex might surpass the length of this line
+        let typedCountForLine = 0;
+        if (typedIndex - globalCharIndex > 0) {
+          typedCountForLine = Math.min(line.length, typedIndex - globalCharIndex);
         }
+
+        if (typedCountForLine > 0) {
+          // typed substring
+          const typedSub = line.substring(0, typedCountForLine);
+          ctx.fillText(typedSub, startX, startY + i * lineHeight);
+        }
+        globalCharIndex += line.length;
+      }
     }
-  
+
     function gameLoop() {
-        if (gameState === "playing") {
-            update();
-            draw();
-            requestAnimationFrame(gameLoop);
-        }
+      if (gameState === "playing") {
+        update();
+        draw();
+        requestAnimationFrame(gameLoop);
+      }
     }
-  
-    // Pause/Resume
+
     window.pauseCurrentGame = function() {
-        if (gameState === "playing") {
-            gameState = "paused";
-        }
+      if (gameState === "playing") {
+        gameState = "paused";
+      }
     };
   
     window.resumeCurrentGame = function() {
-        if (gameState === "paused") {
-            gameState = "playing";
-            requestAnimationFrame(gameLoop);
-        }
+      if (gameState === "paused") {
+        gameState = "playing";
+        requestAnimationFrame(gameLoop);
+      }
     };
   
     window.getCurrentGameState = function() {
-        return gameState;
+      return gameState;
     };
-  
-    // Keydown handler
+
+    // Keydown => start or type
     document.addEventListener("keydown", function(e) {
-        if (gameState === "start") {
-            // unlock audio
-            scoreSound.play().then(()=>{
-                scoreSound.pause();
-                scoreSound.currentTime=0;
-            }).catch(err=>console.error(err));
-            wrongSound.play().then(()=>{
-                wrongSound.pause();
-                wrongSound.currentTime=0;
-            }).catch(err=>console.error(err));
-    
-            gameState = "playing";
-            resetGame();
-            requestAnimationFrame(gameLoop);
-        }
-        else if (gameState === "playing") {
-            if (e.key && e.key.length === 1) {
-                const expectedChar = currentSnippet.flatCode.charAt(typedIndex);
-                console.log(`Key pressed: "${e.key}", Expected: "${expectedChar}"`);
-                
-                if (e.key === expectedChar) {
-                    typedIndex++;
-                    console.log(`Correct! typedIndex now ${typedIndex}`);
-                    
-                    // Force a draw update for better feedback
-                    draw();
-                    
-                    if (typedIndex >= currentSnippet.flatCode.length) {
-                        score++;
-                        if (score > highScore) {
-                            highScore = score;
-                            localStorage.setItem("codeModeHighScore", highScore);
-                        }
-                        scoreSound.currentTime = 0;
-                        scoreSound.play().catch(err=>console.error(err));
-                        spawnNewSnippet();
-                    }
-                } else {
-                    // Wrong key
-                    wrongSound.currentTime = 0;
-                    wrongSound.play().catch(err=>console.error(err));
-                    typedIndex = 0; // Reset typing progress
-                }
-            }
-        }
-    });
-  
-    // Buttons
-    document.getElementById("playAgain").addEventListener("click", () => {
-        hideGameOverPopup();
+      if (gameState === "start") {
+        // unlock audio
+        scoreSound.play().then(()=>{
+          scoreSound.pause();
+          scoreSound.currentTime=0;
+        }).catch(err=>console.error(err));
+        wrongSound.play().then(()=>{
+          wrongSound.pause();
+          wrongSound.currentTime=0;
+        }).catch(err=>console.error(err));
+
         gameState = "playing";
         resetGame();
         requestAnimationFrame(gameLoop);
+      }
+      else if (gameState === "playing") {
+        if (e.key && e.key.length === 1) {
+          // We check the next expected char
+          const expectedChar = currentSnippet.charAt(typedIndex);
+          log(`Key: "${e.key}" vs Expected: "${expectedChar}"`);
+
+          // NOTE: we compare EXACT, so ' ' vs newlines etc. 
+          // If you want to treat \r\n or special keys differently, adapt logic
+          if (e.key === expectedChar) {
+            typedIndex++;
+            draw(); // immediate feedback
+            if (typedIndex >= currentSnippet.length) {
+              score++;
+              if (score > highScore) {
+                highScore = score;
+                localStorage.setItem("codeModeHighScore", highScore);
+              }
+              scoreSound.currentTime = 0;
+              scoreSound.play().catch(err=>console.error(err));
+              spawnNewSnippet();
+            }
+          } else {
+            wrongSound.currentTime = 0;
+            wrongSound.play().catch(err=>console.error(err));
+            typedIndex = 0; // reset if they typed something wrong
+          }
+        }
+      }
+    });
+
+    // Buttons: "Play Again", "Quit"
+    document.getElementById("playAgain").addEventListener("click", () => {
+      hideGameOverPopup();
+      gameState = "playing";
+      resetGame();
+      requestAnimationFrame(gameLoop);
     });
   
     function quitGame() {
-        ctx.clearRect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
-        displayMessage("Thanks for playing!", 48, "white", SCREEN_HEIGHT / 2);
-        setTimeout(() => window.close(), 1500);
+      ctx.clearRect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+      displayMessage("Thanks for playing!", 48, "white", SCREEN_HEIGHT / 2);
+      setTimeout(() => window.close(), 1500);
     }
   
     document.getElementById("quit").addEventListener("click", () => {
-        hideGameOverPopup();
-        quitGame();
+      hideGameOverPopup();
+      quitGame();
     });
   
     document.getElementById("closeBtn").addEventListener("click", () => {
-        quitGame();
+      quitGame();
     });
-  
+
     backgroundImage.onload = () => {
-        if (gameState === "start") {
-            startScreen();
-        }
+      if (gameState === "start") {
+        startScreen();
+      }
     };
+
+    // Force initial load
+    log("Loading initial code snippets from file");
+    loadCodeSnippetsFromFile()
+        .then(snippets => {
+            codeSnippets = snippets;
+            log(`Loaded ${codeSnippets.length} initial code snippets from file`);
+        })
+        .catch(err => {
+            log(`Error loading initial code from file: ${err.message}`);
+        });
     
-    console.log("Code Mode loaded!");
+    log("Code Mode loaded!");
 }
-  
+
 window.initCodeMode = initCodeMode;

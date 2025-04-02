@@ -336,8 +336,16 @@ function initLetterMode() {
   function quitGame() {
     ctx.clearRect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
     displayMessage("Thanks for playing!", 48, "white", SCREEN_HEIGHT / 2);
-    setTimeout(() => window.close(), 1500);
+    setTimeout(() => window.close(), 1000);
   }
+
+  document.getElementById("quit").addEventListener("click", () => {
+    hideGameOverPopup();
+    quitGame();
+  });
+  document.getElementById("closeBtn").addEventListener("click", () => {
+    quitGame();
+  });
 
   document.getElementById("mainMenuBtn").addEventListener("click", () => {
     hideGameOverPopup();

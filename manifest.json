@@ -3,9 +3,9 @@
   "name": "LetterStorm",
   "version": "1.0",
   "description": "A typing game to improve your typing speed and accuracy",
-  "permissions": [],
+  "permissions": ["storage"],
   "content_security_policy": {
-    "extension_pages": "script-src 'self'; object-src 'self'"
+    "extension_pages": "script-src 'self'; object-src 'self'; style-src 'self' 'unsafe-inline'; connect-src 'self' https://*.googleapis.com https://identitytoolkit.googleapis.com https://*.firebase.googleapis.com https://*.firebaseio.com https://firestore.googleapis.com wss://*.firebaseio.com"
   },
   "action": {
     "default_popup": "login.html"
@@ -29,7 +29,9 @@
   ],
   "host_permissions": [
     "https://*.firebaseio.com/",
-    "https://*.googleapis.com/"
+    "https://*.googleapis.com/",
+    "https://identitytoolkit.googleapis.com/",
+    "https://firestore.googleapis.com/"
   ],
   "externally_connectable": {
     "matches": ["*://*.firebaseapp.com/*", "*://*.web.app/*"]

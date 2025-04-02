@@ -2,9 +2,10 @@
 <html>
 <head>
   <meta charset="utf-8">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; connect-src 'self' https://*.googleapis.com https://identitytoolkit.googleapis.com https://*.firebase.googleapis.com https://*.firebaseio.com https://firestore.googleapis.com wss://*.firebaseio.com; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline';">
   <title>LetterStorm</title>
-  <!-- Load the futuristic Orbitron font -->
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+  <!-- Replace Google Fonts with local font -->
+  <link rel="stylesheet" href="fonts/orbitron.css">
   <style>
     /* Fixed dimensions so the game area fills 800x600 exactly */
     html, body {
