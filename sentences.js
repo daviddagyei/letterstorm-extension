@@ -77,7 +77,7 @@ function initSentenceMode() {
       if (DEBUG) console.log(`[Sentence Mode] ${msg}`);
   }
 
-  const SENTENCE_TIME = 20000; // 10 seconds allowed per sentence
+  const SENTENCE_TIME = 30000; // 10 seconds allowed per sentence
   let typedTimeLeft = 0;
 
   let score = 0;
