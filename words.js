@@ -1,4 +1,6 @@
 function initWordMode() {
+  console.log("Word mode initialized");
+
   const canvas = document.getElementById('gameCanvas');
   const ctx = canvas.getContext('2d');
 
@@ -173,6 +175,39 @@ function initWordMode() {
     clearInterval(wordInterval);
     document.getElementById("popupScore").textContent = `Final Score: ${score}`;
     document.getElementById("gameOverlay").style.display = "flex";
+
+  let highScore = 0;
+  const loadHighScore = () => {
+    if (window.ScoresManager) {
+      console.log("Loading letter mode high score from ScoresManager");
+      return ScoresManager.loadHighScore("wordMode")
+        .then(score => {
+          highScore = score;
+          console.log("Letter mode high score loaded:", highScore);
+        })
+        .catch(err => {
+          console.error("Error loading high score:", err);
+          highScore = parseInt(localStorage.getItem("wordModeHighScore")) || 0;
+        });
+    } else {
+      console.log("ScoresManager not found, using localStorage");
+      highScore = parseInt(localStorage.getItem("wordModeHighScore")) || 0;
+      return Promise.resolve();
+    }
+  };
+  
+  const saveHighScore = (newScore) => {
+    if (window.ScoresManager) {
+      console.log("Saving letter mode high score to ScoresManager:", newScore);
+      return ScoresManager.saveHighScore("wordMode", newScore);
+    } else {
+      console.log("ScoresManager not found, using localStorage");
+      localStorage.setItem("wordModeHighScore", newScore);
+      return Promise.resolve();
+    }
+  };
+
+  loadHighScore();
   }
 
   function hideGameOverPopup() {
@@ -307,6 +342,16 @@ function initWordMode() {
           if (score > highScore) {
             highScore = score;
             localStorage.setItem("wordModeHighScore", highScore);
+
+            if (window.ScoresManager && typeof ScoresManager.saveHighScore === 'function') {
+              ScoresManager.saveHighScore("wordMode", score)
+                .then(success => {
+                  console.log("Word mode score saved to Firestore:", success);
+                })
+                .catch(error => {
+                  console.error("Error saving word mode score to Firestore:", error);
+                });
+            }
           }
           scoreSound.currentTime = 0;
           scoreSound.play().catch((error) => {
@@ -387,3 +432,5 @@ function initWordMode() {
     return gameState;
   };
 }
+
+window.initWordMode = initWordMode;

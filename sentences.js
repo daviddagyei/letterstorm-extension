@@ -10,74 +10,41 @@ function initSentenceMode() {
   
     let gameState = "start";
   
-    // Load sentences from file
     let sentences = [];
-    
-    // Function to strip punctuation from a string
-    function stripPunctuation(str) {
-        return str.replace(/[.,\/#!?$%\^&\*;:{}=\-_`~()'"]/g, "");
+    if (window.sentenceGenerator) {
+        try {
+            sentences = window.sentenceGenerator.getImmediateSentences(15);
+            console.log("AI sentences loaded:", sentences);
+        } catch (error) {
+            console.error("Error loading AI sentences:", error);
+        }
     }
     
-    // Function to load sentences from file
-    function loadSentencesFromFile() {
-        return fetch('sentence_list.txt')
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Failed to load sentence_list.txt');
-                }
-                return response.text();
-            })
-            .then(text => {
-                // Split the text file by newlines, filter out empty lines, and strip punctuation
-                const loadedSentences = text.split('\n')
-                    .map(line => line.trim())
-                    .filter(line => line.length > 0)
-                    .map(line => stripPunctuation(line));
-                
-                if (loadedSentences.length === 0) {
-                    throw new Error('No sentences found in the file');
-                }
-                
-                console.log(`Loaded ${loadedSentences.length} sentences from file`);
-                return loadedSentences;
-            });
+    if (!sentences || !Array.isArray(sentences) || sentences.length === 0) {
+        console.log("No AI sentences available, using fallbacks");
+        sentences = [
+            "The quick brown fox jumps over the lazy dog.",
+            "All that glitters is not gold.",
+            "Actions speak louder than words.",
+            "A picture is worth a thousand words.",
+            "The early bird catches the worm.",
+            "Don't count your chickens before they hatch.",
+            "Practice makes perfect.",
+            "Time flies when you're having fun.", 
+            "Better late than never.",
+            "Two wrongs don't make a right."
+        ];
     }
-    
-    // Attempt to load sentences from file
-    loadSentencesFromFile()
-        .then(loadedSentences => {
-            sentences = loadedSentences;
-            if (gameState === "playing") {
-                spawnNewSentence();
-            }
-        })
-        .catch(error => {
-            console.error("Error loading sentences from file:", error);
-            // Fallback sentences if file loading fails - also strip punctuation
-            sentences = [
-                "The quick brown fox jumps over the lazy dog",
-                "All that glitters is not gold",
-                "Actions speak louder than words",
-                "A picture is worth a thousand words",
-                "The early bird catches the worm",
-                "Dont count your chickens before they hatch",
-                "Practice makes perfect",
-                "Time flies when youre having fun", 
-                "Better late than never",
-                "Two wrongs dont make a right"
-            ];
-        });
   
     let currentSentence = "";
     let typedIndex = 0;
   
-    // Debug logging
     const DEBUG = true;
     function log(msg) {
         if (DEBUG) console.log(`[Sentence Mode] ${msg}`);
     }
   
-    const SENTENCE_TIME = 20000; // 10 seconds allowed per sentence
+    const SENTENCE_TIME = 30000;
     let typedTimeLeft = 0;
   
     let score = 0;
@@ -85,38 +52,40 @@ function initSentenceMode() {
     let level = 1;
     let nextLevelScore = 30;
   
-    // High score from localStorage
     let highScore = parseInt(localStorage.getItem("sentenceModeHighScore")) || 0;
   
-    // Assets
     const backgroundImage = new Image();
     backgroundImage.src = "background.png";
     const scoreSound = new Audio("score.mp3");
     const wrongSound = new Audio("wrong.mp3");
   
-    // Glow color
     const GLOW_COLOR = "#00ffff";
   
-    // We store the chosen font size so the sentence fits
     let sentenceFontSize = 48;
     
-    // Refresh sentences periodically based on level
     function refreshSentencesList() {
-        loadSentencesFromFile()
-            .then(loadedSentences => {
-                log(`Refreshed ${loadedSentences.length} sentences from file`);
-                sentences = loadedSentences;
+        if (!window.sentenceGenerator) return;
+        
+        let difficulty = "medium";
+        if (level <= 2) difficulty = "easy";
+        else if (level >= 5) difficulty = "hard";
+            
+        log(`Refreshing sentences with difficulty: ${difficulty}`);
+        
+        window.sentenceGenerator.fetchSentences(15, difficulty)
+            .then(newSentences => {
+                if (newSentences && newSentences.length > 0) {
+                    log(`Got ${newSentences.length} new sentences from AI`);
+                    sentences = newSentences;
+                }
             })
             .catch(err => {
-                log(`Error refreshing sentences from file: ${err.message}`);
+                log(`Error fetching sentences: ${err.message}`);
             });
     }
   
-    // ------------------------------------------------------------
-    // spawnNewSentence & dynamic font
-    // ------------------------------------------------------------
     function spawnNewSentence() {
-        if (level > 1) {
+        if (level > 1 && window.sentenceGenerator) {
             refreshSentencesList();
         }
         
@@ -133,7 +102,6 @@ function initSentenceMode() {
         sentenceFontSize = pickFittingFontSize(currentSentence);
     }
   
-    // picks a font size so the sentence fits within ~80% of the canvas width
     function pickFittingFontSize(sentence) {
       let fontSize = 48;
       const maxWidth = SCREEN_WIDTH * 0.8;
@@ -148,9 +116,6 @@ function initSentenceMode() {
       return 16;
     }
   
-    // ------------------------------------------------------------
-    // HUD & drawing
-    // ------------------------------------------------------------
     function drawHUD() {
       ctx.save();
       const hudGradient = ctx.createLinearGradient(5, 5, 5, 130);
@@ -169,25 +134,20 @@ function initSentenceMode() {
       ctx.shadowColor = "blue";
       ctx.shadowBlur = 10;
   
-      // High Score
       ctx.fillStyle = "#00ffff";
       ctx.fillText(`High Score: ${highScore}`, 15, 35);
   
-      // Score
       ctx.fillStyle = "white";
       ctx.fillText(`Score: ${score}`, 15, 65);
   
-      // Missed
       ctx.fillStyle = "red";
       ctx.fillText(`Missed: ${missed}`, 15, 95);
   
-      // Level
       ctx.fillStyle = "yellow";
       ctx.fillText(`Level: ${level}`, 15, 125);
   
       ctx.shadowBlur = 0;
   
-      // Show time left
       const secondsLeft = Math.ceil(typedTimeLeft / 1000);
       ctx.fillText(`Time: ${secondsLeft}s`, SCREEN_WIDTH - 120, 35);
     }
@@ -212,38 +172,50 @@ function initSentenceMode() {
     function showGameOverPopup() {
       document.getElementById("popupScore").textContent = `Final Score: ${score}`;
       document.getElementById("gameOverlay").style.display = "flex";
+      
+      if (score > highScore) {
+        highScore = score;
+        localStorage.setItem("sentenceModeHighScore", highScore);
+        
+        if (window.ScoresManager && typeof ScoresManager.saveHighScore === 'function') {
+          ScoresManager.saveHighScore("sentenceMode", score)
+            .then(success => {
+              console.log("Sentence mode score saved to Firestore:", success);
+            })
+            .catch(error => {
+              console.error("Error saving sentence mode score to Firestore:", error);
+            });
+        }
+      }
     }
   
     function hideGameOverPopup() {
       document.getElementById("gameOverlay").style.display = "none";
     }
   
-    // ------------------------------------------------------------
-    // resetGame
-    // ------------------------------------------------------------
     function resetGame() {
       score = 0;
       missed = 0;
       level = 1;
       nextLevelScore = 30;
       
-      // Try to refresh sentences at game start
-      loadSentencesFromFile()
-          .then(newSentences => {
-              if (newSentences && newSentences.length > 0) {
-                  sentences = newSentences;
-                  log("Refreshed sentences for new game");
-              }
-              spawnNewSentence();
-          })
-          .catch(() => {
-              spawnNewSentence();
-          });
+      if (window.sentenceGenerator) {
+          window.sentenceGenerator.fetchSentences(15, "medium")
+              .then(newSentences => {
+                  if (newSentences && newSentences.length > 0) {
+                      sentences = newSentences;
+                      log("Refreshed sentences for new game");
+                  }
+                  spawnNewSentence();
+              })
+              .catch(() => {
+                  spawnNewSentence();
+              });
+      } else {
+          spawnNewSentence();
+      }
     }
   
-    // ------------------------------------------------------------
-    // update & draw
-    // ------------------------------------------------------------
     function update() {
       typedTimeLeft -= 16.7;
       if (typedTimeLeft <= 0) {
@@ -270,24 +242,19 @@ function initSentenceMode() {
   
       drawHUD();
   
-      // We'll do left alignment for the text, but center it by offset
       ctx.font = `${sentenceFontSize}px 'Orbitron', sans-serif`;
       ctx.textAlign = "left";
   
-      // measure the total width to center
       const totalWidth = ctx.measureText(currentSentence).width;
       const centerX = (SCREEN_WIDTH - totalWidth) / 2;
       const centerY = SCREEN_HEIGHT / 2;
   
-      // draw faint entire sentence
       ctx.shadowBlur = 0;
       ctx.fillStyle = "rgba(255,255,255,0.3)";
       ctx.fillText(currentSentence, centerX, centerY);
   
-      // typed portion in bright color
       const typedPart = currentSentence.substring(0, typedIndex);
       
-      // Only draw the typed part if there is one
       if (typedIndex > 0) {
           log(`Drawing typed part: "${typedPart}" (${typedIndex}/${currentSentence.length})`);
           
@@ -306,9 +273,6 @@ function initSentenceMode() {
       }
     }
   
-    // ------------------------------------------------------------
-    // Pause/Resume
-    // ------------------------------------------------------------
     window.pauseCurrentGame = function() {
       if (gameState === "playing") {
         gameState = "paused";
@@ -322,17 +286,12 @@ function initSentenceMode() {
       }
     };
   
-    // so main.js can check for "playing"/"paused"
     window.getCurrentGameState = function() {
       return gameState;
     };
   
-    // ------------------------------------------------------------
-    // Keydown => start or type
-    // ------------------------------------------------------------
     document.addEventListener("keydown", function(e) {
       if (gameState === "start") {
-        // unlock audio
         scoreSound.play().then(()=>{
           scoreSound.pause();
           scoreSound.currentTime=0;
@@ -347,7 +306,6 @@ function initSentenceMode() {
         requestAnimationFrame(gameLoop);
       }
       else if (gameState === "playing") {
-        // just typed a char, no pause since we do ctrl in main.js
         if (e.key && e.key.length === 1) {
           const expectedChar = currentSentence.charAt(typedIndex);
           log(`Key pressed: "${e.key}", Expected: "${expectedChar}"`);
@@ -356,21 +314,54 @@ function initSentenceMode() {
             typedIndex++;
             log(`Correct! typedIndex now ${typedIndex}`);
             
-            // Force a draw update immediately for better feedback
             draw();
             
             if (typedIndex >= currentSentence.length) {
               score++;
-              if (score > highScore) {
-                highScore = score;
-                localStorage.setItem("sentenceModeHighScore", highScore);
-              }
+
+
+
+              let highScore = 0;
+              const loadHighScore = () => {
+                if (window.ScoresManager) {
+                  console.log("Loading letter mode high score from ScoresManager");
+                  return ScoresManager.loadHighScore("letterMode")
+                    .then(score => {
+                      highScore = score;
+                      console.log("Letter mode high score loaded:", highScore);
+                    })
+                    .catch(err => {
+                      console.error("Error loading high score:", err);
+                      highScore = parseInt(localStorage.getItem("letterModeHighScore")) || 0;
+                    });
+                } else {
+                  console.log("ScoresManager not found, using localStorage");
+                  highScore = parseInt(localStorage.getItem("letterModeHighScore")) || 0;
+                  return Promise.resolve();
+                }
+              };
+              
+              const saveHighScore = (newScore) => {
+                if (window.ScoresManager) {
+                  console.log("Saving letter mode high score to ScoresManager:", newScore);
+                  return ScoresManager.saveHighScore("letterMode", newScore);
+                } else {
+                  console.log("ScoresManager not found, using localStorage");
+                  localStorage.setItem("letterModeHighScore", newScore);
+                  return Promise.resolve();
+                }
+              };
+
+              loadHighScore();
+
+
+
+
               scoreSound.currentTime = 0;
               scoreSound.play().catch(err=>console.error(err));
               spawnNewSentence();
             }
           } else {
-            // wrong => reset typedIndex
             wrongSound.currentTime = 0;
             wrongSound.play().catch(err=>console.error(err));
             typedIndex = 0;
@@ -379,9 +370,6 @@ function initSentenceMode() {
       }
     });
   
-    // ------------------------------------------------------------
-    // Buttons: "Play Again", "Quit" ...
-    // ------------------------------------------------------------
     document.getElementById("playAgain").addEventListener("click", () => {
       hideGameOverPopup();
       gameState = "playing";
@@ -392,18 +380,9 @@ function initSentenceMode() {
     function quitGame() {
       ctx.clearRect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
       displayMessage("Thanks for playing!", 48, "white", SCREEN_HEIGHT / 2);
-      setTimeout(() => window.close(), 1000);
+      setTimeout(() => window.close(), 1500);
     }
-    document.getElementById("mainMenuBtn").addEventListener("click", () => {
-      hideGameOverPopup();
-      goToMainMenu();
-    });
   
-    function goToMainMenu() {
-      document.getElementById("gameCanvas").style.display = "none";
-      document.getElementById("gameOverlay").style.display = "none";
-      document.getElementById("modeOverlay").style.display = "flex";
-    }
     document.getElementById("quit").addEventListener("click", () => {
       hideGameOverPopup();
       quitGame();
@@ -419,16 +398,21 @@ function initSentenceMode() {
       }
     };
   
-    // Force immediate refresh of sentences from file instead of AI
-    log("Loading initial sentences from file");
-    loadSentencesFromFile()
-        .then(loadedSentences => {
-            sentences = loadedSentences;
-            log(`Loaded ${sentences.length} initial sentences from file`);
-        })
-        .catch(error => {
-            log(`Error loading initial sentences from file: ${error.message}`);
-        });
+    if (window.sentenceGenerator) {
+        log("Requesting initial AI sentences");
+        window.sentenceGenerator.fetchSentences(15)
+            .then(newSentences => {
+                if (newSentences && newSentences.length > 0) {
+                    log(`Got ${newSentences.length} initial sentences from AI`);
+                    sentences = newSentences;
+                }
+            })
+            .catch(error => {
+                log(`Error getting initial sentences: ${error.message}`);
+            });
+    } else {
+        log("No sentence generator available");
+    }
     
     log("Sentence Mode loaded!");
 }
