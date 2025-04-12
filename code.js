@@ -192,25 +192,37 @@ function initCodeMode() {
       document.getElementById("popupScore").textContent = `Final Score: ${score}`;
       document.getElementById("gameOverlay").style.display = "flex";
       
-      let highScore = 0;
       const loadHighScore = () => {
         if (window.ScoresManager) {
           console.log("Loading letter mode high score from ScoresManager");
-          return ScoresManager.loadHighScore("letterMode")
+          return ScoresManager.loadHighScore("codeMode")
             .then(score => {
               highScore = score;
               console.log("Letter mode high score loaded:", highScore);
             })
             .catch(err => {
               console.error("Error loading high score:", err);
-              highScore = parseInt(localStorage.getItem("letterModeHighScore")) || 0;
+              highScore = parseInt(localStorage.getItem("codeModeHighScore")) || 0;
             });
         } else {
           console.log("ScoresManager not found, using localStorage");
-          highScore = parseInt(localStorage.getItem("letterModeHighScore")) || 0;
+          highScore = parseInt(localStorage.getItem("codeModeHighScore")) || 0;
           return Promise.resolve();
         }
       };
+      
+      const saveHighScore = (newScore) => {
+        if (window.ScoresManager) {
+          console.log("Saving letter mode high score to ScoresManager:", newScore);
+          return ScoresManager.saveHighScore("codeMode", newScore);
+        } else {
+          console.log("ScoresManager not found, using localStorage");
+          localStorage.setItem("codeModeHighScore", newScore);
+          return Promise.resolve();
+        }
+      };
+
+      loadHighScore();
     }
   
     function hideGameOverPopup() {
