@@ -366,18 +366,18 @@ function initSentenceMode() {
             const loadHighScore = () => {
               if (window.ScoresManager) {
                 console.log("Loading letter mode high score from ScoresManager");
-                return ScoresManager.loadHighScore("letterMode")
+                return ScoresManager.loadHighScore("sentenceMode")
                   .then(score => {
                     highScore = score;
                     console.log("Letter mode high score loaded:", highScore);
                   })
                   .catch(err => {
                     console.error("Error loading high score:", err);
-                    highScore = parseInt(localStorage.getItem("letterModeHighScore")) || 0;
+                    highScore = parseInt(localStorage.getItem("sentenceModeHighScore")) || 0;
                   });
               } else {
                 console.log("ScoresManager not found, using localStorage");
-                highScore = parseInt(localStorage.getItem("letterModeHighScore")) || 0;
+                highScore = parseInt(localStorage.getItem("sentenceModeHighScore")) || 0;
                 return Promise.resolve();
               }
             };
@@ -385,10 +385,10 @@ function initSentenceMode() {
             const saveHighScore = (newScore) => {
               if (window.ScoresManager) {
                 console.log("Saving letter mode high score to ScoresManager:", newScore);
-                return ScoresManager.saveHighScore("letterMode", newScore);
+                return ScoresManager.saveHighScore("sentenceMode", newScore);
               } else {
                 console.log("ScoresManager not found, using localStorage");
-                localStorage.setItem("letterModeHighScore", newScore);
+                localStorage.setItem("sentenceModeHighScore", newScore);
                 return Promise.resolve();
               }
             };
