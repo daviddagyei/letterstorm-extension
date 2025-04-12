@@ -4,7 +4,7 @@ document.addEventListener('DOMContentLoaded', function() {
     return;
   }
   
-  let currentMode = 'letterMode';
+  let currentMode = 'sentenceMode';
   
   document.querySelectorAll('.tab').forEach(tab => {
     tab.addEventListener('click', () => {
@@ -70,10 +70,6 @@ document.addEventListener('DOMContentLoaded', function() {
           }
         });
         
-        if (rank === 1) {
-          container.innerHTML = '<div class="error">No scores found for this mode.</div>';
-          return;
-        }
         
         container.innerHTML = '';
         container.appendChild(table);

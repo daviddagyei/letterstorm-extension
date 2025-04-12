@@ -106,7 +106,7 @@ document.addEventListener('DOMContentLoaded', () => {
       })
       .catch((error) => {
         console.error("Login error:", error.code, error.message);
-        loginError.textContent = error.message;
+        loginError.textContent = "Invalid username or password";
         
         // Re-enable form
         submitBtn.disabled = false;
@@ -162,11 +162,11 @@ document.addEventListener('DOMContentLoaded', () => {
             createdAt: firebase.firestore.FieldValue.serverTimestamp()
           })
           .catch(error => {
-            console.error("Error saving to Firestore:", error);
-            throw new Error("Failed to save user to database: " + error.message);
+            console.error("Error saving your username");
+            throw new Error("Failed to save user to database " );
           })
           .then(() => {
-            console.log("User data saved successfully to Firestore");
+            console.log("User data saved successfully");
             
             // Store username temporarily
             localStorage.setItem('tempUsername', username);
@@ -185,7 +185,7 @@ document.addEventListener('DOMContentLoaded', () => {
       })
       .catch((error) => {
         console.error("Signup error:", error);
-        signupError.textContent = error.message;
+        signupError.textContent = "Invlaid username or password";
       })
       .finally(() => {
         // Re-enable form

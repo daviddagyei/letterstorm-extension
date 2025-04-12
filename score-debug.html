@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Score Debug Tool</title>
+  <link rel="stylesheet" href="fonts/orbitron.css">
+  <style>
+    body {
+      font-family: 'Orbitron', sans-serif;
+      background-color: #0B0B28;
+      color: #EEE;
+      padding: 20px;
+      margin: 0;
+    }
+    
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+      background-color: rgba(0, 0, 0, 0.5);
+      border-radius: 8px;
+      box-shadow: 0 0 20px rgba(0, 255, 255, 0.2);
+    }
+    
+    h1, h2 {
+      color: #00ffff;
+    }
+    
+    .score-panel {
+      margin-bottom: 30px;
+      padding: 15px;
+      background-color: rgba(0, 0, 0, 0.3);
+      border-radius: 8px;
+    }
+    
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 20px;
+    }
+    
+    th, td {
+      padding: 12px;
+      text-align: left;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    th {
+      background-color: rgba(0, 255, 255, 0.1);
+      color: #00ffff;
+    }
+    
+    .button-group {
+      margin-top: 15px;
+      display: flex;
+      gap: 10px;
+    }
+    
+    button {
+      padding: 10px 15px;
+      background-color: #00ffff;
+      color: #0B0B28;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-family: 'Orbitron', sans-serif;
+    }
+    
+    button:hover {
+      background-color: #33ffff;
+    }
+    
+    button.danger {
+      background-color: #ff3333;
+      color: white;
+    }
+    
+    .log {
+      background-color: rgba(0, 0, 0, 0.7);
+      padding: 15px;
+      border-radius: 5px;
+      font-family: monospace;
+      white-space: pre-wrap;
+      height: 200px;
+      overflow-y: auto;
+      margin-top: 20px;
+    }
+    
+    input[type="number"] {
+      padding: 8px;
+      background-color: rgba(0, 0, 0, 0.3);
+      border: 1px solid #00ffff;
+      border-radius: 4px;
+      color: white;
+      margin-right: 10px;
+    }
+    
+    .score-input {
+      display: flex;
+      align-items: center;
+      margin-bottom: 15px;
+    }
+    
+    .score-input label {
+      margin-right: 10px;
+      color: #00ffff;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Score Debug Tool</h1>
+    
+    <div class="score-panel">
+      <h2>Local Storage Scores</h2>
+      <div id="local-scores">Loading...</div>
+      <div class="button-group">
+        <button id="refresh-local">Refresh</button>
+        <button id="clear-local" class="danger">Clear Local Scores</button>
+      </div>
+    </div>
+    
+    <div class="score-panel">
+      <h2>Firestore Scores</h2>
+      <div id="firestore-scores">Please login to view scores</div>
+      <div class="button-group">
+        <button id="refresh-firestore">Refresh</button>
+        <button id="reset-firestore" class="danger">Reset Firestore Scores</button>
+      </div>
+    </div>
+    
+    <div class="score-panel">
+      <h2>Manual Score Entry</h2>
+      <div class="score-input">
+        <label for="mode-select">Game Mode:</label>
+        <select id="mode-select">
+          <option value="letterMode">Letters</option>
+          <option value="wordMode">Words</option>
+          <option value="sentenceMode">Sentences</option>
+          <option value="codeMode">Code</option>
+        </select>
+      </div>
+      <div class="score-input">
+        <label for="score-input">Score:</label>
+        <input type="number" id="score-input" min="0" value="0">
+      </div>
+      <div class="button-group">
+        <button id="save-local">Save to Local</button>
+        <button id="save-firestore">Save to Firestore</button>
+        <button id="save-both">Save to Both</button>
+      </div>
+    </div>
+    
+    <div class="score-panel">
+      <h2>Debug Log</h2>
+      <div id="log" class="log"></div>
+      <div class="button-group">
+        <button id="clear-log">Clear Log</button>
+        <button id="back-btn">Back to Game</button>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Load Firebase scripts -->
+  <script src="lib/firebase-app-compat.js"></script>
+  <script src="lib/firebase-auth-compat.js"></script>
+  <script src="lib/firebase-firestore-compat.js"></script>
+  <script src="firebase-config.js"></script>
+  
+  <!-- Load scores manager -->
+  <script src="scores-manager.js"></script>
+  
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const logEl = document.getElementById('log');
+      const localScoresEl = document.getElementById('local-scores');
+      const firestoreScoresEl = document.getElementById('firestore-scores');
+      
+      function log(message) {
+        const timestamp = new Date().toLocaleTimeString();
+        logEl.innerHTML += `[${timestamp}] ${message}\n`;
+        logEl.scrollTop = logEl.scrollHeight;
+      }
+      
+      function clearLog() {
+        logEl.innerHTML = '';
+      }
+      
+      // Load local scores
+      function loadLocalScores() {
+        const modes = ['letterMode', 'wordMode', 'sentenceMode', 'codeMode'];
+        const scores = {};
+        
+        modes.forEach(mode => {
+          scores[mode] = localStorage.getItem(`${mode}HighScore`) || '0';
+        });
+        
+        let html = '<table><tr><th>Mode</th><th>Score</th></tr>';
+        for (const [mode, score] of Object.entries(scores)) {
+          const displayMode = mode.replace('Mode', '');
+          html += `<tr><td>${displayMode}</td><td>${score}</td></tr>`;
+        }
+        html += '</table>';
+        
+        localScoresEl.innerHTML = html;
+        log('Local scores loaded');
+      }
+      
+      // Load Firestore scores
+      async function loadFirestoreScores() {
+        if (!firebase.auth().currentUser) {
+          firestoreScoresEl.innerHTML = '<p>Please login to view scores</p>';
+          return;
+        }
+        
+        firestoreScoresEl.innerHTML = '<p>Loading...</p>';
+        
+        try {
+          const userId = firebase.auth().currentUser.uid;
+          log(`Loading scores for user ID: ${userId}`);
+          
+          const db = firebase.firestore();
+          const userScoresDoc = await db.collection('userScores').doc(userId).get();
+          
+          if (!userScoresDoc.exists) {
+            firestoreScoresEl.innerHTML = '<p>No scores found in Firestore</p>';
+            log('No scores found in Firestore');
+            return;
+          }
+          
+          const data = userScoresDoc.data();
+          log(`Found user scores document: ${JSON.stringify(data)}`);
+          
+          let html = '<table><tr><th>Mode</th><th>Score</th><th>Date</th></tr>';
+          
+          const modes = ['letterMode', 'wordMode', 'sentenceMode', 'codeMode'];
+          modes.forEach(mode => {
+            const score = data[mode] || '0';
+            const dateField = `${mode}Date`;
+            const date = data[dateField] ? 
+              new Date(data[dateField].toDate()).toLocaleString() : 
+              'N/A';
+            const displayMode = mode.replace('Mode', '');
+            
+            html += `<tr><td>${displayMode}</td><td>${score}</td><td>${date}</td></tr>`;
+          });
+          
+          html += '</table>';
+          firestoreScoresEl.innerHTML = html;
+          
+        } catch (error) {
+          log(`Error loading Firestore scores: ${error.message}`);
+          firestoreScoresEl.innerHTML = `<p>Error: ${error.message}</p>`;
+        }
+      }
+      
+      // Save score to local storage
+      function saveLocalScore(mode, score) {
+        const currentScore = parseInt(localStorage.getItem(`${mode}HighScore`)) || 0;
+        if (score > currentScore) {
+          localStorage.setItem(`${mode}HighScore`, score);
+          log(`Saved ${score} to localStorage for ${mode}`);
+          return true;
+        } else {
+          log(`Score ${score} not higher than current ${currentScore} for ${mode}`);
+          return false;
+        }
+      }
+      
+      // Save score to Firestore
+      async function saveFirestoreScore(mode, score) {
+        if (!firebase.auth().currentUser) {
+          log('Not logged in, cannot save to Firestore');
+          return false;
+        }
+        
+        try {
+          if (window.ScoresManager && typeof ScoresManager.saveHighScore === 'function') {
+            const result = await ScoresManager.saveHighScore(mode, score);
+            log(`Score saved with ScoresManager: ${result}`);
+            return result;
+          } else {
+            log('ScoresManager not available');
+            return false;
+          }
+        } catch (error) {
+          log(`Error saving to Firestore: ${error.message}`);
+          return false;
+        }
+      }
+      
+      // Clear local scores
+      function clearLocalScores() {
+        const modes = ['letterMode', 'wordMode', 'sentenceMode', 'codeMode'];
+        modes.forEach(mode => {
+          localStorage.removeItem(`${mode}HighScore`);
+        });
+        log('All local scores cleared');
+        loadLocalScores();
+      }
+      
+      // Reset Firestore scores
+      async function resetFirestoreScores() {
+        if (!firebase.auth().currentUser) {
+          log('Not logged in, cannot reset Firestore scores');
+          return;
+        }
+        
+        try {
+          const userId = firebase.auth().currentUser.uid;
+          const db = firebase.firestore();
+          
+          // Create reset data (all scores to 0)
+          const resetData = {
+            userId: userId,
+            letterMode: 0,
+            wordMode: 0,
+            sentenceMode: 0,
+            codeMode: 0
+          };
+          
+          await db.collection('userScores').doc(userId).set(resetData, { merge: true });
+          log('Firestore scores reset to 0');
+          loadFirestoreScores();
+        } catch (error) {
+          log(`Error resetting Firestore scores: ${error.message}`);
+        }
+      }
+      
+      // Event listeners
+      document.getElementById('refresh-local').addEventListener('click', loadLocalScores);
+      document.getElementById('clear-local').addEventListener('click', clearLocalScores);
+      document.getElementById('refresh-firestore').addEventListener('click', loadFirestoreScores);
+      document.getElementById('reset-firestore').addEventListener('click', resetFirestoreScores);
+      document.getElementById('clear-log').addEventListener('click', clearLog);
+      document.getElementById('back-btn').addEventListener('click', () => window.location.href = 'index.html');
+      
+      document.getElementById('save-local').addEventListener('click', () => {
+        const mode = document.getElementById('mode-select').value;
+        const score = parseInt(document.getElementById('score-input').value) || 0;
+        saveLocalScore(mode, score);
+        loadLocalScores();
+      });
+      
+      document.getElementById('save-firestore').addEventListener('click', async () => {
+        const mode = document.getElementById('mode-select').value;
+        const score = parseInt(document.getElementById('score-input').value) || 0;
+        await saveFirestoreScore(mode, score);
+        loadFirestoreScores();
+      });
+      
+      document.getElementById('save-both').addEventListener('click', async () => {
+        const mode = document.getElementById('mode-select').value;
+        const score = parseInt(document.getElementById('score-input').value) || 0;
+        saveLocalScore(mode, score);
+        await saveFirestoreScore(mode, score);
+        loadLocalScores();
+        loadFirestoreScores();
+      });
+      
+      // Check auth state
+      firebase.auth().onAuthStateChanged(user => {
+        if (user) {
+          log(`Logged in as: ${user.email}`);
+          loadFirestoreScores();
+        } else {
+          log('Not logged in');
+          firestoreScoresEl.innerHTML = '<p>Please login to view scores</p>';
+        }
+      });
+      
+      // Initialize
+      loadLocalScores();
+      log('Score debug tool initialized');
+    });
+  </script>
+</body>
+</html>
