@@ -361,33 +361,41 @@ function initSentenceMode() {
           
           if (typedIndex >= currentSentence.length) {
             score++;
-            // Get the initial active tab's mode
-            const activeTab = document.querySelector('.tab.active');
-            let currentMode = activeTab ? activeTab.dataset.mode : 'letterMode';
+
             
-            // Log the initial mode
-            console.log("Initial scoreboard mode:", currentMode);
+            const loadHighScore = () => {
+              if (window.ScoresManager) {
+                console.log("Loading letter mode high score from ScoresManager");
+                return ScoresManager.loadHighScore("letterMode")
+                  .then(score => {
+                    highScore = score;
+                    console.log("Letter mode high score loaded:", highScore);
+                  })
+                  .catch(err => {
+                    console.error("Error loading high score:", err);
+                    highScore = parseInt(localStorage.getItem("letterModeHighScore")) || 0;
+                  });
+              } else {
+                console.log("ScoresManager not found, using localStorage");
+                highScore = parseInt(localStorage.getItem("letterModeHighScore")) || 0;
+                return Promise.resolve();
+              }
+            };
             
-            // Add click event listeners to all tabs
-            document.querySelectorAll('.tab').forEach(tab => {
-              tab.addEventListener('click', () => {
-                // Remove active class from all tabs
-                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-                
-                // Add active class to clicked tab
-                tab.classList.add('active');
-                
-                // Update current mode from data attribute
-                currentMode = tab.dataset.mode;
-                console.log("Switched to mode:", currentMode);
-                
-                // Load scores for the selected mode
-                loadScores(currentMode);
-              });
-            });
+            const saveHighScore = (newScore) => {
+              if (window.ScoresManager) {
+                console.log("Saving letter mode high score to ScoresManager:", newScore);
+                return ScoresManager.saveHighScore("letterMode", newScore);
+              } else {
+                console.log("ScoresManager not found, using localStorage");
+                localStorage.setItem("letterModeHighScore", newScore);
+                return Promise.resolve();
+              }
+            };
+
+            loadHighScore();
             
-            // Initial load of scores for default mode
-            loadScores(currentMode);
+            
             scoreSound.currentTime = 0;
             scoreSound.play().catch(err=>console.error(err));
             spawnNewSentence();
