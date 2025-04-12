@@ -363,6 +363,8 @@ function initCodeMode() {
       }
     });
 
+    // Buttons: "Play Again", "Quit" ...
+    // ------------------------------------------------------------
     document.getElementById("playAgain").addEventListener("click", () => {
       hideGameOverPopup();
       gameState = "playing";
@@ -373,9 +375,18 @@ function initCodeMode() {
     function quitGame() {
       ctx.clearRect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
       displayMessage("Thanks for playing!", 48, "white", SCREEN_HEIGHT / 2);
-      setTimeout(() => window.close(), 1500);
+      setTimeout(() => window.close(), 1000);
     }
+    document.getElementById("mainMenuBtn").addEventListener("click", () => {
+      hideGameOverPopup();
+      goToMainMenu();
+    });
   
+    function goToMainMenu() {
+      document.getElementById("gameCanvas").style.display = "none";
+      document.getElementById("gameOverlay").style.display = "none";
+      document.getElementById("modeOverlay").style.display = "flex";
+    }
     document.getElementById("quit").addEventListener("click", () => {
       hideGameOverPopup();
       quitGame();
@@ -384,7 +395,7 @@ function initCodeMode() {
     document.getElementById("closeBtn").addEventListener("click", () => {
       quitGame();
     });
-
+  
     backgroundImage.onload = () => {
       if (gameState === "start") {
         startScreen();
