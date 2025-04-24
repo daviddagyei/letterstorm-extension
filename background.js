@@ -11,7 +11,7 @@ chrome.runtime.onMessageExternal.addListener(
 
 // Open initial popup when extension is installed
 chrome.runtime.onInstalled.addListener(() => {
-  console.log('LetterStorm Extension installed');
+  console.log('Timely Tab Extension installed');
 });
 
 // Listen for connection issues and try to reconnect

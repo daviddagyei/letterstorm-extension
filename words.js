@@ -160,8 +160,9 @@ function initWordMode() {
   function startScreen() {
     ctx.clearRect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
     ctx.drawImage(backgroundImage, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
-    displayMessage("Typing Words", 74, "white", SCREEN_HEIGHT / 2 - 50);
-    displayMessage("Type the words as they appear", 36, "white", SCREEN_HEIGHT / 2 + 50);
+    displayMessage("Typing Words", 74, "white", SCREEN_HEIGHT / 2 - 100);
+    displayMessage("Press any key to start", 36, "white", SCREEN_HEIGHT / 2);
+    displayMessage("Press CTRL/CMD to pause game", 24, "#00ffff", SCREEN_HEIGHT / 2 + 50);
   }
 
   function gameOverScreen() {

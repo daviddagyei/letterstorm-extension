@@ -1,1 +1,1 @@
-# letterstorm-extension
+# timely-tab-extension

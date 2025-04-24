@@ -176,8 +176,9 @@ function initLetterMode() {
   function startScreen() {
     ctx.clearRect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
     ctx.drawImage(backgroundImage, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
-    displayMessage("Falling Letters", 74, "white", SCREEN_HEIGHT / 2 - 50);
-    displayMessage("Press any key to start", 36, "white", SCREEN_HEIGHT / 2 + 50);
+    displayMessage("Falling Letters", 74, "white", SCREEN_HEIGHT / 2 - 100);
+    displayMessage("Press any key to start", 36, "white", SCREEN_HEIGHT / 2);
+    displayMessage("Press CTRL/CMD to pause game", 24, "#00ffff", SCREEN_HEIGHT / 2 + 50);
   }
 
   function gameOverScreen() {
