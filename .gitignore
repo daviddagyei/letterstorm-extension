@@ -29,3 +29,7 @@ package-lock.json
 # Temporary files
 .tmp/
 .cache/
+
+# Firebase config files containing sensitive API keys
+firebase-config.js
+forgot-password-init.js
